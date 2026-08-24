@@ -1,0 +1,345 @@
+/* css/customer.css */
+
+/* ====== Sidebar Styling (Matches Dashboard) ====== */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: #27ae60;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    margin: 15px 0;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    background: #27ae60;
+}
+
+/* ====== Page Body Background (Matches Dashboard) ====== */
+body {
+    background: linear-gradient(to right, #2c3e50, #27ae60);
+    font-family: Arial, sans-serif;
+}
+
+/* ====== Main Content Styling ====== */
+.container {
+    margin-left: 270px;
+    padding: 20px;
+}
+
+/* Hidden class*/
+.hidden{
+    display: none;
+}
+
+/* ====== Responsive Design (Mobile-Friendly) ====== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .container {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    /* Removed #paymentManagement responsive width */
+
+    /* Removed #approvalsTable font-size responsive */
+
+    /* Removed #paymentButtons flex-direction responsive */
+}
+
+@media (max-width: 480px) {
+    /* Removed #logPaymentForm responsive padding and max-width */
+}
+
+/* ====== Profit Analysis Page Specific Styles ====== */
+#profitAnalysis {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#profitAnalysisControls {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+#profitAnalysisControls label {
+    font-weight: bold;
+    color: #333;
+}
+
+#profitAnalysisControls select,
+#profitAnalysisControls input[type="number"],
+#profitAnalysisControls input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+#profitAnalysisControls button {
+    background: #27ae60; /* Use your primary green color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+#profitAnalysisControls button:hover {
+    background: #1e8449; /* Darker shade for hover */
+}
+
+#profitAnalysisTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#profitAnalysisTable th,
+#profitAnalysisTable td {
+    /* Soften borders and ensure left alignment */
+    border: 1px solid rgba(221, 221, 221, 0.7); /* Slightly softer border */
+    padding: 12px 15px; /* Increased padding for better spacing */
+    text-align: left;
+    /* Reverted text color for readability against light backgrounds */
+    color: #333; /* Dark text for readability */
+}
+
+#profitAnalysisTable th {
+    background-color: #14213D; /* Darker header background */
+    color: white; /* White text for dark header */
+    font-weight: bold;
+    font-size: 1.1rem; /* Slightly larger font for headers */
+    letter-spacing: 0.5px; /* Subtle letter spacing */
+    text-transform: uppercase; /* Uppercase text for professionalism */
+    border-bottom: 2px solid #FCA311; /* Accent line below header */
+}
+
+/* Apply border-radius to specific header cells */
+#profitAnalysisTable th:first-child {
+    border-top-left-radius: 8px;
+}
+
+#profitAnalysisTable th:last-child {
+    border-top-right-radius: 8px;
+}
+
+
+#profitAnalysisTable tr:nth-child(even) {
+    background-color: #f5f5f5; /* Slightly different shade for even rows */
+}
+
+#profitAnalysisTable tr:hover {
+    background-color: #e0e0e0; /* More distinct hover effect */
+}
+
+/* Styles for specific filter sections (initially hidden) */
+/* REMOVED: display: flex; from here. Let JS control display. */
+#monthYearSelector,
+#quarterYearSelector,
+#yearOnlySelector,
+#customRangeSelector {
+    /* Ensure they are hidden by default, or let the inline style handle it */
+    display: none; /* Explicitly hide them by default */
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap; /* Added for better responsiveness */
+}
+
+/* Individual display settings when shown by JS */
+#monthYearSelector.active,
+#quarterYearSelector.active,
+#yearOnlySelector.active,
+#customRangeSelector.active {
+    display: flex; /* Only apply flex when active class is added by JS */
+}
+
+
+/* ====== Styles for Custom Date Range Picker ====== */
+#customRangeSelector {
+    /* This rule is now redundant for display:none as it's handled above */
+    /* But keeping it here for other specific styles if needed */
+    flex-direction: row; /* Keep for layout when visible */
+    gap: 10px;
+    align-items: center;
+}
+
+#customRangeSelector label {
+    font-weight: bold;
+    color: #333;
+}
+
+#customRangeSelector input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Add some spacing for the controls */
+#profitAnalysisControls > div {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/* ====== Styles for Export Options ====== */
+#exportOptions {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+#exportOptions label {
+    font-weight: bold;
+    color: #333;
+}
+
+#exportOptions button {
+    background: #007bff; /* Primary blue color */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#exportOptions button:hover {
+    background: #0056b3; /* Darker shade for hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* ====== Responsive Adjustments for Profit Analysis ====== */
+@media (max-width: 768px) {
+    #profitAnalysis {
+        width: 90%; /* Adjust width for smaller screens if needed */
+    }
+
+    #profitAnalysisControls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #profitAnalysisControls > div { /* Style the individual filter selectors */
+        width: 100%;
+        margin-bottom: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #profitAnalysisControls label {
+        margin-bottom: 5px;
+    }
+
+    #profitAnalysisControls select,
+    #profitAnalysisControls input[type="number"],
+    #profitAnalysisControls input[type="date"],
+    #profitAnalysisControls button {
+        width: calc(100% - 16px); /* Adjust for padding */
+    }
+
+    #profitAnalysisControls > div > button { /* Apply full width to buttons within selectors */
+        width: 100%;
+    }
+
+    #profitAnalysisTable {
+        font-size: 14px; /* Adjust font size for better readability */
+    }
+
+    #exportOptions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #exportOptions button {
+        width: calc(100% - 16px);
+    }
+}
+
+@media (max-width: 480px) {
+    #profitAnalysis {
+        width: 95%; /* Further adjust width for very small screens */
+        padding: 15px;
+    }
+
+    #profitAnalysisTable {
+        font-size: 12px; /* Further reduce font size on smaller screens */
+    }
+
+    #profitAnalysisTable th,
+    #profitAnalysisTable td {
+        padding: 8px;
+    }
+
+    #exportOptions label {
+        margin-bottom: 5px;
+    }
+
+    #exportOptions button {
+        width: 100%;
+    }
+}

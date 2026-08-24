@@ -1,0 +1,426 @@
+/* notification.css - Merged and Updated Styles */
+
+/* General Body and Container Styling */
+body {
+    background: linear-gradient(to right, #2c3e50, #27ae60); /* Background from your original notification.css */
+    font-family: 'Inter', sans-serif; /* Prefer Inter font, ensure it's imported or available */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Flex to accommodate sidebar */
+    min-height: 100vh;
+}
+
+/* Custom Alert Styling */
+#customAlertContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* Allows clicks through the container */
+}
+
+.custom-alert {
+    padding: 12px 25px;
+    margin-top: 20px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    opacity: 0.95;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: auto; /* Allows clicks on the alert itself */
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+.custom-alert-info { background-color: #2196F3; } /* Blue */
+.custom-alert-success { background-color: #4CAF50; } /* Green */
+.custom-alert-warning { background-color: #ff9800; } /* Orange */
+.custom-alert-error { background-color: #f44336; } /* Red */
+
+/* Loading Overlay and Spinner Styling */
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(20, 33, 61, 0.7); /* Slightly less opaque overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001; /* Above alerts */
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none; /* Ensure it doesn't block clicks when hidden */
+    opacity: 0; /* Start hidden, controlled by JS */
+}
+
+#loadingOverlay.visible {
+    opacity: 1; /* Make visible when JS adds 'visible' class */
+    pointer-events: auto; /* Block clicks when visible */
+}
+
+
+.spinner {
+    border: 6px solid rgba(255, 255, 255, 0.2); /* Thinner, lighter spinner base */
+    border-top: 6px solid #FCA311; /* Orange from your theme for dynamic part */
+    border-radius: 50%;
+    width: 50px; /* Slightly smaller spinner */
+    height: 50px;
+    animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; /* More professional easing */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Sidebar Styling - Adapted for consistency with your other admin pages */
+.sidebar {
+    width: 250px;
+    height: 100vh; /* Full height */
+    background: rgba(0, 0, 0, 0.8); /* Dark background */
+    padding: 15px;
+    position: fixed; /* Fixed position for sidebar */
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0 10px 10px 0; /* Rounded right corners */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo-title {
+    display: flex; /* Use flex to align logo and title */
+    align-items: center;
+    justify-content: center; /* Center content in sidebar */
+    margin-bottom: 30px;
+}
+
+.logo {
+    width: 60px; /* Slightly smaller logo for better fit */
+    height: 60px;
+    margin-right: 15px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar h2 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    color: #27ae60; /* Brand color */
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.menu li {
+    margin: 15px 0;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px; /* More rounded links */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu a:hover {
+    background: #27ae60;
+    color: #14213D; /* Darker text on hover for contrast */
+}
+
+.menu li.active a {
+    background-color: #FCA311; /* Orange for active link */
+    color: #14213D; /* Dark text on orange */
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Main Content Styling */
+.container {
+    flex-grow: 1; /* Allow content to take remaining space */
+    margin-left: 270px; /* Offset for fixed sidebar */
+    padding: 30px; /* Increased padding */
+    background-color: #ecf0f1; /* Light grey background for content, contrasting with body gradient */
+}
+
+/* Section Specific Styles (common for forms/tables) */
+#notificationsManagement {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Softer main shadow */
+}
+
+h2 {
+    color: #14213D; /* Dark color for main headings */
+    text-align: center;
+    margin-bottom: 25px; /* Slightly reduced margin */
+    font-size: 2em; /* Slightly smaller font size */
+    border-bottom: 1px solid #e0e0e0; /* Lighter border */
+    padding-bottom: 10px;
+    font-weight: 600; /* Medium bold */
+}
+
+h3 {
+    color: #14213D; /* Dark color for subheadings */
+    margin-top: 0;
+    margin-bottom: 18px; /* Slightly reduced margin */
+    font-size: 1.4em; /* Further reduced for softer, less bold appearance */
+    text-align: center;
+    font-weight: 600; /* Medium bold */
+}
+
+/* Card and Section Styling */
+.form-section, .table-section {
+    background-color: #ffffff;
+    padding: 20px; /* Slightly reduced padding */
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06); /* Softer shadow */
+    margin-top: 20px;
+}
+
+.card {
+    border: 1px solid #f0f0f0; /* Lighter border */
+    border-radius: 8px;
+    padding: 18px; /* Slightly reduced padding */
+    margin-bottom: 18px; /* Slightly reduced margin */
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03); /* Much softer shadow */
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600; /* Slightly less bold */
+    color: #495057; /* Slightly softer color */
+    font-size: 0.95em;
+}
+
+.form-group input[type="date"] {
+    width: calc(100% - 20px); /* Account for padding */
+    padding: 10px;
+    border: 1px solid #e9ecef; /* Lighter border */
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+    background-color: #ffffff; /* White background for inputs */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="date"]:focus {
+    border-color: #FCA311; /* Orange focus color */
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(252, 163, 17, 0.2); /* Softer glow */
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px; /* Slightly reduced margin */
+}
+
+.submit-button, .cancel-button {
+    padding: 9px 18px; /* Slightly smaller padding */
+    border: none;
+    border-radius: 6px; /* Slightly less rounded buttons */
+    cursor: pointer;
+    font-size: 0.95em; /* Slightly smaller font */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); /* Softer button shadow */
+}
+
+.submit-button {
+    background-color: #27ae60; /* Brand green */
+    color: white;
+}
+
+.submit-button:hover {
+    background-color: #219653; /* Darker shade of brand green */
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cancel-button {
+    background-color: #e74c3c; /* Brand red */
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #cc392c; /* Darker shade of brand red */
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Table Styling */
+#loanNotificationsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.08); /* Softer table shadow */
+}
+
+#loanNotificationsTable th, #loanNotificationsTable td {
+    padding: 11px 14px; /* Slightly reduced padding */
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0; /* Very light border */
+}
+
+#loanNotificationsTable th {
+    background: #14213D;
+    color: white;
+    font-weight: 600; /* Medium bold */
+    text-transform: uppercase;
+    font-size: 0.85em; /* Slightly smaller font */
+}
+
+#loanNotificationsTable tr:nth-child(even) {
+    background: #fafafa; /* Lighter stripe */
+}
+
+#loanNotificationsTable tr:hover {
+    background: rgba(20, 33, 61, 0.05); /* Even softer hover effect */
+}
+
+/* Specific styling for paid rows */
+.paid-installment {
+    background-color: #f0fff0; /* Very light green for paid rows */
+    opacity: 0.8;
+    font-style: italic;
+    color: #555; /* Slightly darker grey for readability */
+}
+
+/* Pagination Styling (if added later) */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px; /* Slightly reduced margin */
+    flex-wrap: wrap;
+}
+
+.pagination-button {
+    padding: 8px 14px; /* Slightly smaller padding */
+    margin: 4px; /* Slightly smaller margin */
+    border: 1px solid #e0e0e0; /* Lighter border */
+    border-radius: 5px;
+    background-color: #ffffff; /* White button background */
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.pagination-button:hover:not(:disabled) {
+    background-color: #f5f5f5; /* Lighter hover */
+    border-color: #d0d0d0;
+}
+
+.pagination-button.active {
+    background-color: #FCA311;
+    color: #14213D;
+    border-color: #FCA311;
+    font-weight: bold;
+}
+
+.pagination-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5; /* Slightly more opaque when disabled */
+    background-color: #f5f5f5;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column; /* Stack sidebar and content */
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative; /* Make it flow with content */
+        border-radius: 0;
+    }
+
+    .container {
+        margin-left: 0; /* Remove sidebar offset */
+        padding: 20px 15px; /* Adjust padding */
+    }
+
+    #notificationsManagement {
+        padding: 15px; /* Adjust padding */
+    }
+
+    .form-actions {
+        flex-direction: column; /* Stack buttons */
+        gap: 10px;
+    }
+
+    .submit-button, .cancel-button {
+        width: 100%; /* Full width buttons */
+    }
+
+    /* Responsive tables: stack cells */
+    table, th, td {
+        display: block;
+    }
+
+    th {
+        display: none; /* Hide table headers on small screens */
+    }
+
+    td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 15px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    /* Specific data-label content for loanNotificationsTable */
+    #loanNotificationsTable td:nth-of-type(1):before { content: "Loan ID:"; }
+    #loanNotificationsTable td:nth-of-type(2):before { content: "Customer Name:"; }
+    #loanNotificationsTable td:nth-of-type(3):before { content: "Amount Due:"; }
+    #loanNotificationsTable td:nth-of-type(4):before { content: "Due Date:"; }
+    #loanNotificationsTable td:nth-of-type(5):before { content: "Status:"; }
+}

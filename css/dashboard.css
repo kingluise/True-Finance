@@ -1,0 +1,305 @@
+
+/* Global Styles */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #2c3e50, #27ae60);
+    color: #fff;
+    display: flex;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: #27ae60;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    margin: 15px 0;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    background: #27ae60;
+}
+
+/* Main Content */
+.container {
+    margin-left: 270px;
+    padding: 20px;
+    flex-grow: 1;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.welcome-message h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+/* Search Bar */
+.search-bar {
+    display: flex;
+    gap: 10px;
+}
+
+.search-bar input {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    width: 200px;
+    outline: none;
+}
+
+.search-bar button {
+    background: #27ae60;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.search-bar button:hover {
+    background: #219150;
+}
+
+/* Dashboard Cards */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Individual Card */
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Fix for the Missing Cards */
+.card:nth-child(5),
+.card:nth-child(6),
+.card:nth-child(7),
+.card:nth-child(8),
+.card:nth-child(9) {
+    display: block; /* Ensures all 9 cards are visible */
+}
+
+/* Card Colors */
+.card:nth-child(1) { background: #3498db; color: #fff; } /* Total Loans */
+.card:nth-child(2) { background: #f1c40f; color: #333; } /* Pending Approvals */
+.card:nth-child(3) { background: #2ecc71; color: #fff; } /* Active Loans */
+.card:nth-child(4) { background: #e74c3c; color: #fff; } /* Overdue Loans */
+.card:nth-child(5) { background: #9b59b6; color: #fff; } /* Total Customers */
+.card:nth-child(6) { background: #1abc9c; color: #fff; } /* Due Payments */
+.card:nth-child(7) { background: #34495e; color: #fff; } /* Due Loans */
+.card:nth-child(8) { background: #e67e22; color: #fff; } /* Total Principal */
+.card:nth-child(9) { background: #c0392b; color: #fff; } /* Total Interest */
+
+/* Hover Effect */
+.card:hover {
+    transform: scale(1.05);
+}
+
+/* Analytics Section */
+.analytics {
+    margin-top: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    color: #333;
+    width: 80% !important; /* Increased width to 80% */
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.analytics h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.analytics canvas#loanChart {
+    width: 100% !important;
+    height: auto !important;
+}
+
+
+/* Transactions Section */
+.transactions {
+    margin-top: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.transactions h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.transactions table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.transactions table th, .transactions table td {
+    padding: 12px;
+    text-align: left;
+}
+
+.transactions table th {
+    background: #27ae60;
+    color: white;
+}
+
+.transactions table td {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.transactions .approved {
+    color: #2ecc71;
+}
+
+.transactions .pending {
+    color: #f1c40f;
+}
+
+.transactions .overdue {
+    color: #e74c3c;
+}
+
+/* Announcements Section */
+.announcements {
+    margin-top: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.announcements h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.announcements ul {
+    list-style: none;
+    padding: 0;
+}
+
+.announcements ul li {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .dashboard-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .container {
+        margin-left: 0;
+        padding: 15px;
+    }
+    .sidebar {
+        position: absolute;
+        left: -270px;
+        transition: 0.3s;
+    }
+}
+
+@media (max-width: 500px) {
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+    .search-bar input {
+        width: 150px;
+    }
+}
+
+.typing::after {
+    content: '|';
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}

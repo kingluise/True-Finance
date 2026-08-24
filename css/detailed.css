@@ -1,0 +1,272 @@
+/* --- General Variables and Styles --- */
+:root {
+    --primary-color: #4A90E2;
+    --secondary-color: #50E3C2;
+    --accent-color: #FFC107;
+    --text-color: #333;
+    --text-light: #666;
+    --bg-color: #f0f4f8;
+    --card-bg: #fff;
+    --border-color: #e0e6ed;
+    --sidebar-bg: #14213d28;
+    --sidebar-text: #E5E5E5;
+    --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow-light);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+h2 {
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0;
+}
+
+/* --- Sidebar & Layout --- */
+.sidebar {
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    height: 100vh;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid var(--accent-color);
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.menu li {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.menu li a {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--sidebar-text);
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu li.active a, .menu li a:hover {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+}
+
+.container {
+    flex-grow: 1;
+    margin-left: 250px;
+    padding: 40px;
+    max-width: calc(100% - 250px);
+    box-sizing: border-box;
+}
+
+/* --- Filter Section --- */
+#profitAnalysisControls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+#profitAnalysisControls label,
+.filter-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+#profitAnalysisControls select,
+#profitAnalysisControls input {
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: var(--bg-color);
+    transition: border-color 0.2s ease;
+}
+
+#profitAnalysisControls select:focus,
+#profitAnalysisControls input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+#profitAnalysisControls button {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+#profitAnalysisControls button:hover {
+    background-color: #357ABD;
+}
+
+/* --- Table Styling --- */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-light);
+}
+
+th, td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+thead {
+    background-color: #f9fafb;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f4f7f9;
+}
+
+tbody tr:hover {
+    background-color: #eaf1f7;
+    transition: background-color 0.2s ease;
+}
+
+#exportDetailedPdfBtn {
+    /* Set the button's background color */
+    background-color: #dc3545; /* A standard red color, often used for PDF icons */
+    
+    /* Set the text color to white for contrast */
+    color: white; 
+    
+    /* Remove the default button border */
+    border: none;
+    
+    /* Add some padding to make the button bigger and more clickable */
+    padding: 10px 20px; 
+    
+    /* Center the text and icon inside the button */
+    text-align: center;
+    
+    /* Remove any underline on the text */
+    text-decoration: none;
+    
+    /* Display as an inline-block element */
+    display: inline-block;
+    
+    /* Set the font size */
+    font-size: 16px;
+    
+    /* Add some margin to separate it from other elements */
+    margin: 4px 2px;
+    
+    /* Change the cursor to a pointer on hover */
+    cursor: pointer;
+    
+    /* Add rounded corners */
+    border-radius: 8px;
+    
+    /* Add a smooth transition for hover effects */
+    transition: background-color 0.3s ease;
+}
+
+/* Style for when the user hovers over the button */
+#exportDetailedPdfBtn:hover {
+    background-color: #c82333; /* A slightly darker red */
+}
+
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        box-shadow: none;
+    }
+    .container {
+        margin-left: 0;
+        padding: 20px;
+        max-width: 100%;
+    }
+    #profitAnalysisControls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    #profitAnalysisControls button {
+        width: 100%;
+    }
+    .menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .menu li {
+        width: auto;
+    }
+}
+
+.hidden {
+    display: none;
+}

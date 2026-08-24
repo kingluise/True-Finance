@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lois Finance Limited - Login</title>
+    <link rel="icon" type="image/x-icon" href="/images/loism.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/config.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="branding">
+                <img src="" alt="">
+                <h2>Welcome to True Finance Limited</h2>
+                <p>Manage customer loans and repayments, and track financial records with ease.</p>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="login-box">
+                <h2>True Finance | Sign In</h2>
+                <div id="message"></div>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="input-group" style="position: relative;">
+                     <label for="password">Password</label>
+                      <div style="position: relative;">
+                        <input type="password" id="password" placeholder="Enter your password" required style="padding-right: 40px;">
+                        <i class="fa-solid fa-eye" id="togglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #777;"></i>
+                      </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="role">Role</label>
+                        <select id="role" required>
+                            <option value="">Select Role</option>
+                            <option value="admin">Admin</option>
+                            <option value="operator">Operator</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="login-button">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="js/login.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,591 @@
+/* css/customer.css (Original content from your provided file) */
+
+/* ====== Sidebar Styling (Matches Dashboard) ====== */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: #27ae60;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    margin: 15px 0;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    background: #27ae60;
+}
+
+/* Page Body Background (Matches Dashboard) */
+body {
+    background: linear-gradient(to right, #2c3e50, #27ae60);
+    font-family: Arial, sans-serif;
+}
+
+/* Main Content Styling */
+.container {
+    margin-left: 270px;
+    padding: 20px;
+}
+
+/* Payment Management Styling */
+#paymentManagement {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#paymentButtons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#logPaymentForm,
+#pendingApprovals { /* Keeping this original for context, though #pendingApprovals might be unused here */
+    margin-top: 20px;
+}
+
+#approvalsTable { /* Keeping this original for context, likely not used on this page */
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#approvalsTable th,
+#approvalsTable td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#approvalsTable th {
+    background: #14213D;
+    color: white;
+    font-weight: bold;
+}
+
+#approvalsTable tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+#approvalsTable tr:hover {
+    background: rgba(20, 33, 61, 0.1);
+}
+
+/* Payment buttons (Original from your provided CSS) */
+#paymentButtons button {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 15px;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background: #14213D;
+    color: white;
+}
+
+#paymentButtons button:hover {
+    background: #FCA311;
+    color: #14213D;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* log payment form styling (Original from your provided CSS) */
+#logPaymentForm {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+}
+
+#logPaymentForm h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #343a40;
+    font-size: 1.2rem;
+}
+
+#paymentForm label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+#paymentForm input,
+#paymentForm select {
+    width: calc(100% - 12px);
+    padding: 8px;
+    margin-bottom: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+#paymentForm input:focus,
+#paymentForm select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+#paymentForm button[type="submit"] {
+    background: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+#paymentForm button[type="submit"]:hover {
+    background: #0056b3;
+}
+
+/* Hidden class (Original from your provided CSS) */
+.hidden{
+    display: none;
+}
+
+/* ====== Responsive Design (Mobile-Friendly) (Original from your provided CSS) ====== */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .container {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    #paymentManagement {
+        width: 90%;
+    }
+
+    #approvalsTable {
+        font-size: 14px;
+    }
+
+    #paymentButtons {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    #logPaymentForm {
+        padding: 15px;
+        max-width: 90%;
+    }
+}
+
+
+/* ====== NEW STYLES ADDED BELOW (Only additions for new HTML elements) ====== */
+
+/* Custom Alert Styling (for showCustomAlert function) */
+#customAlertContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* Allows clicks through the container */
+}
+
+.custom-alert {
+    padding: 12px 25px;
+    margin-top: 20px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    opacity: 0.95;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: auto; /* Allows clicks on the alert itself */
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+.custom-alert-info {
+    background-color: #2196F3; /* Blue */
+}
+
+.custom-alert-success {
+    background-color: #4CAF50; /* Green */
+}
+
+.custom-alert-warning {
+    background-color: #ff9800; /* Orange */
+}
+
+.custom-alert-error {
+    background-color: #f44336; /* Red */
+}
+
+/* Additional Sidebar adjustments for consistency with new theme */
+.sidebar .logo-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.sidebar .logo {
+    width: 60px; /* Slightly smaller logo */
+    height: 60px; /* Maintain aspect ratio */
+    margin-right: 15px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar .menu a.active {
+    background-color: #FCA311; /* Use the orange from your existing buttons */
+    color: #14213D; /* Dark text on orange */
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 8px; /* Consistent with other new elements */
+}
+
+
+/* New general classes added to HTML elements */
+.form-section, .table-section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Adjustments for #paymentForm specific elements */
+#paymentForm .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+#paymentForm label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #343a40; /* Harmonizing with your existing text colors */
+    font-size: 1em; /* Standard font size */
+}
+
+/* Override original input/select width for better padding consistency */
+#paymentForm input[type="text"],
+#paymentForm input[type="number"],
+#paymentForm input[type="date"],
+#paymentForm select {
+    width: calc(100% - 20px); /* Adjusted for 10px padding on each side */
+    padding: 10px; /* Increased padding for better input feel */
+    box-sizing: border-box; /* Crucial for width calculation */
+    background-color: #f9f9f9; /* Light background for inputs */
+    border: 1px solid #ced4da; /* Consistent border */
+    border-radius: 5px; /* Consistent border-radius */
+}
+
+#paymentForm input:focus,
+#paymentForm select:focus {
+    border-color: #FCA311; /* Orange focus color to match theme */
+    box-shadow: 0 0 0 0.2rem rgba(252, 163, 17, 0.25); /* Subtle glow */
+}
+
+#paymentForm input[readonly] {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+
+/* New classes for buttons (action-button is primary for #paymentButtons) */
+.action-button {
+    /* Styles are mostly already defined in #paymentButtons button,
+       but this class is added to other buttons like goBackBtn */
+    background: #14213D;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px; /* More rounded to fit new aesthetic */
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.action-button:hover {
+    background: #FCA311;
+    color: #14213D;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.submit-button { /* New class for submit button */
+    background-color: #28a745; /* Green */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cancel-button { /* New class for cancel button */
+    background-color: #dc3545; /* Red */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.go-back-button { /* New class for the Go Back button */
+    margin-top: 20px;
+    background-color: #6c757d; /* Grey */
+}
+
+.go-back-button:hover {
+    background-color: #5a6268;
+}
+
+.form-actions { /* Flex container for form buttons */
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+/* Table styling additions (for confirmationTable and paymentPlanTable) */
+table {
+    /* Most basic table styles are already in your original CSS */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Lighter shadow for inner tables */
+    border-radius: 8px; /* Softer rounded corners */
+}
+
+th, td {
+    padding: 12px 15px; /* Slightly more padding */
+}
+
+/* Action buttons within table rows (for Accept/Decline) */
+td button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-right: 5px;
+    transition: background-color 0.2s ease;
+}
+
+td button.acceptPayment {
+    background-color: #28a745;
+    color: white;
+}
+
+td button.acceptPayment:hover {
+    background-color: #218838;
+}
+
+td button.declinePayment {
+    background-color: #dc3545;
+    color: white;
+}
+
+td button.declinePayment:hover {
+    background-color: #c82333;
+}
+
+/* Pagination Styling */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    flex-wrap: wrap; /* Allow wrapping for small screens */
+}
+
+.pagination-button {
+    padding: 10px 15px;
+    margin: 5px; /* Adjust margin for wrap */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background-color: #e2e6ea;
+}
+
+.pagination-button.active {
+    background-color: #FCA311; /* Orange for active page (from your existing buttons) */
+    color: #14213D;
+    border-color: #FCA311;
+}
+
+.pagination-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background-color: #e9ecef;
+}
+
+/* Payment Plan Specific Styling (New elements) */
+.payment-plan-section {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    border-top: 2px solid #bdc3c7; /* Separator for visual distinction */
+    padding-top: 20px;
+}
+
+.payment-plan-section h4 {
+    text-align: center;
+    color: #14213D; /* Consistent with your h3/h2 */
+    font-size: 1.4em;
+    margin-bottom: 15px;
+}
+
+#paymentPlanTable th:last-child,
+#paymentPlanTable td:last-child {
+    text-align: center; /* Center the radio buttons */
+}
+
+.payment-item-radio {
+    margin: 0; /* Remove default radio button margin */
+}
+
+.payment-item-radio + label {
+    margin-left: 5px; /* Space between radio and label */
+    cursor: pointer;
+}
+
+.paid-installment {
+    background-color: #e6ffe6; /* Light green for paid rows */
+    opacity: 0.7;
+    font-style: italic;
+    color: #666;
+}
+
+.paid-installment .payment-item-radio {
+    cursor: not-allowed;
+}
+
+/* Responsive Design for new elements - Integrated into your existing media queries */
+@media (max-width: 768px) {
+    /* Adjusted existing rules for consistency */
+    body {
+        flex-direction: column; /* Stacks sidebar and content */
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative; /* Allows it to flow naturally */
+        border-radius: 0;
+    }
+
+    .container {
+        margin-left: 0; /* No sidebar offset */
+        padding: 10px;
+    }
+
+    /* Table responsive styling for new tables */
+    #confirmationTable td::before { content: attr(data-label); } /* Generic data-label for confirmation table */
+    #paymentPlanTable td::before { content: attr(data-label); } /* Generic data-label for payment plan table */
+
+    /* Specific data-label content for confirmation table */
+    #confirmationTable td:nth-of-type(1):before { content: "Payment ID:"; }
+    #confirmationTable td:nth-of-type(2):before { content: "Loan ID:"; }
+    #confirmationTable td:nth-of-type(3):before { content: "Amount Paid:"; }
+    #confirmationTable td:nth-of-type(4):before { content: "Date Logged:"; }
+    #confirmationTable td:nth-of-type(5):before { content: "Logged By:"; }
+    #confirmationTable td:nth-of-type(6):before { content: "Status:"; }
+    #confirmationTable td:nth-of-type(7):before { content: "Action:"; }
+
+    /* Specific data-label content for payment plan table */
+    #paymentPlanTable td:nth-of-type(1):before { content: "Due Date:"; }
+    #paymentPlanTable td:nth-of-type(2):before { content: "Amount Due:"; }
+    #paymentPlanTable td:nth-of-type(3):before { content: "Status:"; }
+    #paymentPlanTable td:nth-of-type(4):before { content: "Select:"; }
+}

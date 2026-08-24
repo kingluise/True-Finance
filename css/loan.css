@@ -1,0 +1,626 @@
+/* admin_loan.css - Updated for Loan Page Layout & Modal */
+
+/* ====== General Body and Custom Alert Styling ====== */
+body {
+    background: linear-gradient(to right, #2c3e50, #27ae60);
+    font-family: 'Inter', sans-serif; /* Prefer Inter font */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Use flex to accommodate sidebar and main content */
+    min-height: 100vh;
+}
+
+#customAlertContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* Allows clicks through the container */
+}
+
+.custom-alert {
+    padding: 12px 25px;
+    margin-top: 20px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    opacity: 0.95;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: auto; /* Allows clicks on the alert itself */
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+.custom-alert-info { background-color: #2196F3; } /* Blue */
+.custom-alert-success { background-color: #4CAF50; } /* Green */
+.custom-alert-warning { background-color: #ff9800; } /* Orange */
+.custom-alert-error { background-color: #f44336; } /* Red */
+
+
+/* ====== Sidebar Styling ====== */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0 10px 10px 0; /* Consistent rounded corners */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo-title {
+    display: flex; /* Align logo and title */
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.logo {
+    width: 60px; /* Slightly smaller for better fit */
+    height: 60px;
+    margin-right: 15px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar h2 {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+    color: #27ae60;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.menu li {
+    margin: 15px 0;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px; /* More rounded links */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu a:hover {
+    background: #27ae60;
+    color: #14213D; /* Darker text on hover */
+}
+
+.menu li.active a {
+    background-color: #FCA311; /* Orange for active link */
+    color: #14213D; /* Dark text on orange */
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* ====== Main Content Styling ====== */
+.container {
+    flex-grow: 1;
+    margin-left: 270px; /* Offset for fixed sidebar */
+    padding: 30px; /* Increased padding */
+    background-color: #ecf0f1; /* Light grey background for content */
+}
+
+#loanManagement {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #14213D;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    border-bottom: 2px solid #bdc3c7;
+    padding-bottom: 10px;
+}
+
+h3 {
+    color: #14213D;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.7em;
+    text-align: center;
+}
+
+/* ====== Loan Action Buttons Styling ====== */
+.button-group { /* Renamed from loan-actions for consistency with other pages */
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.action-button {
+    background-color: #14213D; /* Dark blue from your theme */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.action-button:hover {
+    background-color: #FCA311; /* Orange from your theme */
+    color: #14213D;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ====== Form and Table Section General Styles ====== */
+.form-section, .table-section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Form Styling (Applies to #loanApplicationForm, #queryDuePaymentsForm) */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #343a40;
+    font-size: 1em;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select {
+    width: calc(100% - 20px); /* Account for padding */
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #FCA311;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(252, 163, 17, 0.25);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.submit-button, .cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cancel-button {
+    background-color: #dc3545; /* Red */
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.go-back-button { /* For the Go Back buttons */
+    margin-top: 20px;
+    background-color: #6c757d; /* Grey */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.go-back-button:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ====== Table Styling (General for all tables in this page) ====== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #14213D;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: rgba(20, 33, 61, 0.1);
+}
+
+/* Action buttons within table rows (e.g., View Details, Approve, Delete) */
+td .action-button { /* Use .action-button here for consistency */
+    padding: 8px 12px;
+    font-size: 0.9em;
+    border-radius: 5px;
+    background-color: #3498db; /* Default blue for table actions */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin-right: 5px; /* Space between buttons */
+}
+td .action-button:last-child {
+    margin-right: 0;
+}
+td .action-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-1px);
+}
+td .action-button.approve-btn { /* Specific for approve buttons */
+    background-color: #28a745;
+}
+td .action-button.approve-btn:hover {
+    background-color: #218838;
+}
+td .action-button.decline-btn { /* Specific for decline buttons */
+    background-color: #dc3545;
+}
+td .action-button.decline-btn:hover {
+    background-color: #c82333;
+}
+td .action-button.default-btn { /* Specific for default button */
+    background-color: #e74c3c; /* Reddish for default */
+}
+td .action-button.default-btn:hover {
+    background-color: #c0392b;
+}
+td .action-button.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+    transform: none;
+}
+td .action-button.disabled:hover {
+    background-color: #ccc; /* Keep same background on hover when disabled */
+}
+
+
+/* Pagination Styling */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.pagination-button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1em;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background-color: #e2e6ea;
+}
+
+.pagination-button.active {
+    background-color: #FCA311;
+    color: #14213D;
+    border-color: #FCA311;
+}
+
+.pagination-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background-color: #e9ecef;
+}
+
+/* Utility Class */
+.hidden {
+    display: none !important; /* Use !important to ensure override */
+}
+
+/* ====== Loan Details Modal Styling ====== */
+.modal {
+    position: fixed; /* Stay in place */
+    z-index: 1001; /* Sit on top, higher than alerts */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.6); /* Black w/ opacity - dark overlay */
+    display: flex; /* Use flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Centering for non-flex fallback */
+    padding: 30px; /* Increased padding */
+    border: 1px solid #888;
+    width: 90%; /* Max width for content */
+    max-width: 700px; /* Specific max width */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Stronger shadow */
+    position: relative; /* For close button positioning */
+    animation: fadeIn 0.3s ease-out; /* Simple fade-in animation */
+}
+
+.close-button {
+    color: #aaa;
+    float: right; /* Position to top-right */
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute; /* Absolute positioning within modal-content */
+    top: 15px;
+    right: 25px;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+.modal-content h3 {
+    text-align: center;
+    color: #14213D;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+
+.loan-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns for details */
+    gap: 15px 25px; /* Row and column gap */
+    line-height: 1.6;
+}
+
+.loan-details-grid p {
+    margin: 0;
+    color: #343a40;
+}
+
+.loan-details-grid strong {
+    color: #14213D;
+    display: inline-block; /* Keep strong and span on same line */
+    min-width: 120px; /* Align content slightly */
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+/* Animation for modal */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+
+/* ====== Responsive Design ====== */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-radius: 0;
+    }
+
+    .logo-title {
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .menu li {
+        margin-bottom: 0;
+    }
+
+    .menu a {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+
+    .container {
+        margin-left: 0;
+        padding: 20px 15px;
+    }
+
+    #loanManagement {
+        padding: 20px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .action-button {
+        width: 100%;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .submit-button, .cancel-button {
+        width: 100%;
+    }
+
+    /* Responsive tables: stack cells */
+    table, th, td {
+        display: block;
+    }
+
+    th {
+        display: none; /* Hide table headers on small screens */
+    }
+
+    td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 15px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    /* Specific data-label content for each table */
+    /* Manage Loans Table */
+    #manageLoansTable td:nth-of-type(1):before { content: "Loan ID:"; }
+    #manageLoansTable td:nth-of-type(2):before { content: "Customer ID:"; } /* Updated for Customer ID */
+    #manageLoansTable td:nth-of-type(3):before { content: "Amount:"; }
+    #manageLoansTable td:nth-of-type(4):before { content: "Total Repayment:"; }
+    #manageLoansTable td:nth-of-type(5):before { content: "Group:"; }
+    #manageLoansTable td:nth-of-type(6):before { content: "Status:"; }
+    #manageLoansTable td:nth-of-type(7):before { content: "Action:"; }
+
+    /* Approve Loans Table */
+    #approveLoansTable td:nth-of-type(1):before { content: "Loan ID:"; }
+    #approveLoansTable td:nth-of-type(2):before { content: "Customer ID:"; }
+    #approveLoansTable td:nth-of-type(3):before { content: "Amount:"; }
+    #approveLoansTable td:nth-of-type(4):before { content: "Type:"; }
+    #approveLoansTable td:nth-of-type(5):before { content: "Status:"; }
+    #approveLoansTable td:nth-of-type(6):before { content: "Actions:"; }
+
+    /* Queried Payments Table (if still used here) */
+    #queriedPaymentsTable td:nth-of-type(1):before { content: "Loan ID:"; }
+    #queriedPaymentsTable td:nth-of-type(2):before { content: "Customer Name:"; }
+    #queriedPaymentsTable td:nth-of-type(3):before { content: "Amount Due:"; }
+    #queriedPaymentsTable td:nth-of-type(4):before { content: "Due Date:"; }
+    #queriedPaymentsTable td:nth-of-type(5):before { content: "Status:"; }
+
+
+    /* Loan Details Modal responsiveness */
+    .modal-content {
+        width: 95%; /* Make it fill more of the screen on small devices */
+        padding: 20px;
+        box-sizing: border-box; /* Include padding in width */
+    }
+
+    .loan-details-grid {
+        grid-template-columns: 1fr; /* Stack details vertically on small screens */
+        gap: 10px;
+    }
+
+    .loan-details-grid strong {
+        min-width: unset; /* Remove fixed width */
+        margin-right: 10px; /* Add some space */
+    }
+}

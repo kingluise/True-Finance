@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Management</title>
+    <link rel="icon" type="image/x-icon" href="/images/">
+    <link rel="stylesheet" href="css/payment.css">
+    <script src="js/config.js" defer></script>
+    <script src="js/payment.js" defer></script>
+    <style>
+        /* Rolling Page Load Animation */
+        @keyframes rollIn {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(30deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotate(0);
+            }
+        }
+
+        .rolling-load {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #14213D;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            animation: rollOut 0.6s ease-out forwards;
+            animation-delay: 0.8s;
+        }
+
+        @keyframes rollOut {
+            to {
+                transform: translateY(-100vh) rotate(-15deg);
+                opacity: 0;
+            }
+        }
+
+        .rolling-load-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            border-top-color: #FCA311;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modern Table Styling */
+        .table-container {
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            overflow: hidden;
+            position: relative;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        thead {
+            position: relative;
+        }
+
+        th {
+            background: linear-gradient(135deg, #14213D, #1a2a4f);
+            color: white;
+            font-weight: 600;
+            padding: 18px 20px;
+            text-align: left;
+            border-bottom: none;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        th:first-child { border-top-left-radius: 12px; }
+        th:last-child { border-top-right-radius: 12px; }
+
+        tbody tr {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        tbody tr:nth-child(even) { background-color: rgba(249, 249, 249, 0.8); }
+        tbody tr:hover {
+            background-color: rgba(252, 163, 17, 0.1);
+            transform: translateX(5px);
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            vertical-align: middle;
+            position: relative;
+        }
+
+        td:before {
+            content: "";
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: #FCA311;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        tbody tr:hover td:before { opacity: 1; }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .search-bar input[type="text"] {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: #FCA311;
+            box-shadow: 0 0 0 0.2rem rgba(252, 163, 17, 0.25);
+            outline: none;
+        }
+
+        .search-bar button {
+            padding: 10px 20px;
+            background-color: #14213D;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: #FCA311;
+            color: #14213D;
+            transform: translateY(-1px);
+        }
+
+        .loan-id-list {
+            list-style: none;
+            padding: 0; margin: 0;
+            display: flex; flex-wrap: wrap; gap: 5px;
+        }
+        .loan-id-list li {
+            background-color: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #343a40;
+            white-space: nowrap;
+        }
+
+        .hidden { display: none; }
+        .action-button { padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+        .approve-btn { background: #28a745; color: #fff; }
+        .reject-btn { background: #dc3545; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="rolling-load">
+        <div class="rolling-load-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <div id="customAlertContainer"></div>
+
+    <div class="sidebar">
+        <div class="logo-title">
+            <img src="images/" alt="Logo" class="logo">
+            <h2>TRUE FINANCE LIMITED</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="dashboard.html">🏠 Home</a></li>
+            <li><a href="customer.html">👥 Manage Customers</a></li>
+            <li><a href="loan.html">💰 Manage Loans</a></li>
+            <li class="active"><a href="payment.html">💳 Payments</a></li>
+            <li><a href="notification.html">🔔 Notifications</a></li>
+            <li><a href="users.html">👤 Control Panel</a></li>
+            <li><a href="analysis.html">📊 Profit Analytics</a></li>
+            <li><a href="index.html" id="logout">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div id="paymentManagement">
+            <h2>💳 Payment Management</h2>
+
+            <div id="paymentButtons" class="button-group">
+                <button id="logPaymentBtn" class="action-button">Log Payment</button>
+                <button id="paymentConfirmationBtn" class="action-button">Payment Confirmation</button>
+                <button id="paymentTrackerBtn" class="action-button">Payment Tracker</button>
+            </div>
+
+            <!-- Log Payment Form -->
+            <div id="logPaymentForm" class="form-section card hidden">
+                <h3>Log Payment</h3>
+                <form id="paymentForm">
+                    <div class="form-group">
+                        <label for="loanIdInput">Loan ID:</label>
+                        <input type="text" id="loanIdInput" name="loanIdInput" required>
+                        <button type="button" id="fetchLoanBtn" class="action-button">Fetch Loan</button>
+                    </div>
+
+                    <div class="form-group hidden" id="borrowerInfo">
+                        <label for="fullName">Full Name:</label>
+                        <input type="text" id="fullName" name="fullName" readonly>
+                        <label for="loanType">Type of Loan:</label>
+                        <input type="text" id="loanType" name="loanType" readonly>
+                        <label for="loanAmount">Loan Amount:</label>
+                        <input type="number" id="loanAmount" name="loanAmount" readonly>
+                    </div>
+
+                    <div id="paymentPlanContainer" class="payment-plan-section card hidden">
+                        <h4>Loan Payment Plan</h4>
+                        <table id="paymentPlanTable">
+                            <thead>
+                                <tr>
+                                    <th>Due Date</th>
+                                    <th>Amount Due</th>
+                                    <th>Status</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentPlanTableBody">
+                                <tr><td colspan="4" style="text-align: center;">Enter Loan ID to load payment plan.</td></tr>
+                            </tbody>
+                        </table>
+                        <input type="hidden" id="selectedPaymentPlanItemId" name="selectedPaymentPlanItemId">
+                    </div>
+
+                    <div id="paymentDetails" class="hidden">
+                        <div class="form-group">
+                            <label for="amountPaid">Amount Paid:</label>
+                            <input type="number" id="amountPaid" name="amountPaid" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="modeOfPayment">Mode of Payment:</label>
+                            <select id="modeOfPayment" name="modeOfPayment" required>
+                                <option value="bankTransfer">Bank Transfer</option>
+                                <option value="cash">Cash</option>
+                                <option value="pos">POS</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentDate">Payment Date:</label>
+                            <input type="date" id="paymentDate" name="paymentDate" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="submit-button">Submit Payment</button>
+                            <button type="button" id="cancelLogPayment" class="cancel-button">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Payment Confirmation Table -->
+            <div id="confirmationTableContainer" class="hidden table-section card">
+                <h3>Payment Confirmation</h3>
+                <div class="table-container">
+                    <table id="confirmationTable">
+                        <thead>
+                            <tr>
+                                <th>Payment ID</th>
+                                <th>Loan ID</th>
+                                <th>Repayment Schedule ID</th>
+                                <th>Amount Paid</th>
+                                <th>Full Name</th>
+                                <th>Status</th>
+                                <th>Reviewed At</th>
+                                <th>Reviewed By</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="confirmationTableBody">
+                            <tr><td colspan="9">No payments to confirm.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="pagination" class="pagination-controls"></div>
+                <button id="goBackBtn" class="action-button go-back-button">Go Back</button>
+            </div>
+
+            <!-- Payment Tracker Section -->
+            <div id="paymentTrackerContainer" class="hidden table-section card">
+                <h3>Payment Tracker</h3>
+                <div class="search-bar">
+                    <input type="text" id="trackerLoanIdInput" placeholder="Enter Loan ID">
+                    <button id="trackerFetchBtn" class="action-button">Search</button>
+                </div>
+                <div class="table-container">
+                    <table id="paymentTrackerTable">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Loan Amount</th>
+                                <th>Installment ID</th>
+                                <th>Due Date</th>
+                                <th>Amount Due</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentTrackerTableBody">
+                            <tr><td colspan="6">Enter a Loan ID to view payment history.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button id="goBackTrackerBtn" class="action-button go-back-button">Go Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Loader hide
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const rollingLoader = document.querySelector('.rolling-load');
+                if (rollingLoader) {
+                    rollingLoader.style.display = 'none';
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
