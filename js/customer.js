@@ -113,21 +113,37 @@ document.addEventListener("DOMContentLoaded", () => {
         const token = localStorage.getItem("token");
         if (!token) return alert("Please log in.");
 
-        const formData = new FormData(customerForm);
-
-        const idPhotoInput = document.getElementById('idPhoto');
-        if (idPhotoInput.files.length > 0) {
-            formData.append("identificationDocument", idPhotoInput.files[0]);
-        }
-        formData.delete("idPhoto");
+        const jsonData = {
+            fullName: customerForm.fullName.value,
+            dateOfBirth: customerForm.dateOfBirth.value,
+            gender: customerForm.gender.value,
+            maritalStatus: customerForm.maritalStatus.value,
+            residentialAddress: customerForm.residentialAddress.value,
+            email: customerForm.email.value,
+            phoneNumber: customerForm.phoneNumber.value,
+            employmentStatus: customerForm.employmentStatus.value,
+            monthlyIncome: parseFloat(customerForm.monthlyIncome.value) || 0,
+            idType: customerForm.idType.value,
+            idNumber: customerForm.idNumber.value,
+            nin: customerForm.nin.value,
+            bvn: customerForm.bvn.value,
+            guarantor: {
+                fullName: customerForm.guarantorFullName.value,
+                relationshipToBorrower: customerForm.guarantorRelationship.value,
+                residentialAddress: customerForm.guarantorAddress.value,
+                phoneNumber: customerForm.guarantorPhone.value,
+                email: customerForm.guarantorEmail.value
+            }
+        };
 
         try {
             const response = await fetch(`${API_BASE_URL}/Customer/create`, {
                 method: "POST",
                 headers: {
+                    "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: formData
+                body: JSON.stringify(jsonData)
             });
             if (!response.ok) throw new Error("Failed to add customer");
 
@@ -156,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!response.ok) throw new Error("Failed to fetch customer");
 
             const customer = await response.json();
-            
+
             // Populate the modal with the fresh data
             document.getElementById("viewCustomerId").textContent = customer.id;
             document.getElementById("viewFullName").textContent = customer.fullName;
@@ -179,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("viewGuarantorEmail").textContent = customer.guarantorEmail;
             document.getElementById("viewGuarantorIdType").textContent = customer.guarantorIdType;
             document.getElementById("viewGuarantorIdNumber").textContent = customer.guarantorIdNumber;
-            
+
             document.getElementById("viewIdPhoto").src = customer.idPhotoUrl || 'https://placehold.co/400x300/e0e0e0/555?text=ID+Photo+Not+Found';
             document.getElementById("viewPassportPhoto").src = customer.passportPhotoUrl || 'https://placehold.co/400x300/e0e0e0/555?text=Passport+Photo+Not+Found';
 
@@ -198,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // EXPORT PDF
     // ---
     async function exportToPdf() {
-        const customer = exportPdfBtn.customerData; 
+        const customer = exportPdfBtn.customerData;
 
         if (!customer) {
             return console.error('Customer data not found for PDF export.');
