@@ -114,6 +114,40 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Mobile menu toggle button (hidden on desktop) */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1003;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    line-height: 1;
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Overlay behind sidebar when open on mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.sidebar-overlay.visible {
+    display: block;
+}
+
 /* ====== Main Content Styling ====== */
 .container {
     flex-grow: 1;
@@ -502,10 +536,20 @@ td .action-button.disabled:hover {
     }
 
     .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
+        left: -270px;
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        transition: left 0.3s ease;
         border-radius: 0;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .menu-toggle {
+        display: block;
     }
 
     .logo-title {
@@ -514,24 +558,22 @@ td .action-button.disabled:hover {
     }
 
     .menu {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
+        flex-direction: column;
     }
 
     .menu li {
-        margin-bottom: 0;
+        margin: 15px 0;
     }
 
     .menu a {
-        padding: 8px 12px;
-        font-size: 0.9em;
+        padding: 10px 15px;
+        font-size: 1em;
     }
 
     .container {
         margin-left: 0;
         padding: 20px 15px;
+        padding-top: 70px; /* room for the fixed menu toggle button */
     }
 
     #loanManagement {
@@ -545,6 +587,8 @@ td .action-button.disabled:hover {
 
     .action-button {
         width: 100%;
+        padding: 10px 16px;
+        font-size: 0.95em;
     }
 
     .form-actions {
@@ -554,6 +598,13 @@ td .action-button.disabled:hover {
 
     .submit-button, .cancel-button {
         width: 100%;
+        padding: 10px 16px;
+        font-size: 0.95em;
+    }
+
+    td .action-button {
+        padding: 6px 10px;
+        font-size: 0.85em;
     }
 
     /* Responsive tables: stack cells */
@@ -582,18 +633,19 @@ td .action-button.disabled:hover {
     }
 
     /* Specific data-label content for each table */
-    /* Manage Loans Table */
+    /* Manage Loans Table - matches actual columns in loan.html:
+       1 Loan ID, 2 Customer Name, 3 Amount, 4 Type, 5 Status, 6 Actions */
     #manageLoansTable td:nth-of-type(1):before { content: "Loan ID:"; }
-    #manageLoansTable td:nth-of-type(2):before { content: "Customer ID:"; } /* Updated for Customer ID */
+    #manageLoansTable td:nth-of-type(2):before { content: "Customer Name:"; }
     #manageLoansTable td:nth-of-type(3):before { content: "Amount:"; }
-    #manageLoansTable td:nth-of-type(4):before { content: "Total Repayment:"; }
-    #manageLoansTable td:nth-of-type(5):before { content: "Group:"; }
-    #manageLoansTable td:nth-of-type(6):before { content: "Status:"; }
-    #manageLoansTable td:nth-of-type(7):before { content: "Action:"; }
+    #manageLoansTable td:nth-of-type(4):before { content: "Type:"; }
+    #manageLoansTable td:nth-of-type(5):before { content: "Status:"; }
+    #manageLoansTable td:nth-of-type(6):before { content: "Actions:"; }
 
-    /* Approve Loans Table */
+    /* Approve Loans Table - matches actual columns in loan.html:
+       1 Loan ID, 2 Customer Name, 3 Amount, 4 Type, 5 Status, 6 Actions */
     #approveLoansTable td:nth-of-type(1):before { content: "Loan ID:"; }
-    #approveLoansTable td:nth-of-type(2):before { content: "Customer ID:"; }
+    #approveLoansTable td:nth-of-type(2):before { content: "Customer Name:"; }
     #approveLoansTable td:nth-of-type(3):before { content: "Amount:"; }
     #approveLoansTable td:nth-of-type(4):before { content: "Type:"; }
     #approveLoansTable td:nth-of-type(5):before { content: "Status:"; }

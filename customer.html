@@ -229,7 +229,11 @@
 
     <div id="customAlertContainer"></div>
 
-    <div class="sidebar">
+    <!-- Mobile menu toggle -->
+    <button id="menuToggle" class="menu-toggle" aria-label="Toggle menu">☰</button>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="sidebar" id="sidebar">
         <div class="logo-title">
             <img src="images/" alt="Logo" class="logo">
             <h2>TRUE FINANCE LIMITED</h2>
@@ -256,6 +260,7 @@
 
         <div class="customer-list-section card">
             <h3>Customer List</h3>
+            <div class="table-scroll">
             <table id="customer-list">
                 <thead>
                     <tr>
@@ -269,6 +274,7 @@
                     <tr><td colspan="4" class="text-center">Loading customers...</td></tr>
                 </tbody>
             </table>
+            </div>
             <div id="customerPagination" class="pagination-controls"></div>
         </div>
     </div>
@@ -514,5 +520,36 @@
     </div>
 
     <script src="js/customer.js" defer></script>
+    <script>
+        // Mobile sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                overlay.classList.add('visible');
+            }
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('visible');
+            }
+
+            menuToggle?.addEventListener('click', () => {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            overlay?.addEventListener('click', closeSidebar);
+
+            sidebar?.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeSidebar);
+            });
+        });
+    </script>
 </body>
 </html>

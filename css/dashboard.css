@@ -1,4 +1,3 @@
-
 /* Global Styles */
 body {
     margin: 0;
@@ -19,6 +18,8 @@ body {
     top: 0;
     display: flex;
     flex-direction: column;
+    z-index: 1001;
+    box-sizing: border-box;
 }
 
 .logo-title {
@@ -63,18 +64,56 @@ body {
     background: #27ae60;
 }
 
+/* Mobile menu toggle button (hidden on desktop) */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1002;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    line-height: 1;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Overlay behind sidebar when open on mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.sidebar-overlay.visible {
+    display: block;
+}
+
 /* Main Content */
 .container {
     margin-left: 270px;
     padding: 20px;
     flex-grow: 1;
+    min-width: 0; /* allow children (tables) to shrink instead of overflowing */
+    box-sizing: border-box;
 }
 
 /* Dashboard Header */
 .dashboard-header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
     background: rgba(255, 255, 255, 0.1);
     padding: 15px;
     border-radius: 10px;
@@ -89,6 +128,7 @@ body {
 /* Search Bar */
 .search-bar {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
 }
 
@@ -97,6 +137,7 @@ body {
     border-radius: 5px;
     border: none;
     width: 200px;
+    max-width: 100%;
     outline: none;
 }
 
@@ -178,6 +219,7 @@ body {
     width: 80% !important; /* Increased width to 80% */
     margin-left: auto !important;
     margin-right: auto !important;
+    box-sizing: border-box;
 }
 
 .analytics h2 {
@@ -205,8 +247,16 @@ body {
     margin-bottom: 15px;
 }
 
+/* Lets the table scroll horizontally on narrow screens instead of overflowing the page */
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .transactions table {
     width: 100%;
+    min-width: 480px; /* keeps columns readable; scrolls under table-scroll on mobile */
     border-collapse: collapse;
     margin-top: 10px;
 }
@@ -277,11 +327,20 @@ body {
     .container {
         margin-left: 0;
         padding: 15px;
+        padding-top: 70px; /* room for the fixed menu toggle button */
     }
     .sidebar {
-        position: absolute;
         left: -270px;
-        transition: 0.3s;
+        transition: left 0.3s ease;
+    }
+    .sidebar.open {
+        left: 0;
+    }
+    .menu-toggle {
+        display: block;
+    }
+    .analytics {
+        width: 100% !important;
     }
 }
 
