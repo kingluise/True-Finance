@@ -55,6 +55,7 @@ body {
     flex-direction: column;
     border-radius: 0 10px 10px 0; /* Consistent rounded corners */
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 1002;
 }
 
 .logo-title {
@@ -322,8 +323,17 @@ h3 {
 }
 
 /* ====== Table Styling (General for all tables in this page) ====== */
+
+/* Lets tables scroll horizontally on narrow screens instead of overflowing the page */
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 table {
     width: 100%;
+    min-width: 600px; /* keeps columns readable; scrolls under .table-scroll on mobile */
     border-collapse: collapse;
     margin-top: 20px;
     background-color: #ffffff;
@@ -607,56 +617,11 @@ td .action-button.disabled:hover {
         font-size: 0.85em;
     }
 
-    /* Responsive tables: stack cells */
-    table, th, td {
-        display: block;
+    /* Tables now scroll horizontally via .table-scroll instead of stacking into cards,
+       matching the customer page's mobile table behavior. */
+    table {
+        font-size: 14px;
     }
-
-    th {
-        display: none; /* Hide table headers on small screens */
-    }
-
-    td {
-        text-align: right;
-        padding-left: 50%;
-        position: relative;
-    }
-
-    td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 0;
-        width: 50%;
-        padding-left: 15px;
-        font-weight: bold;
-        text-align: left;
-    }
-
-    /* Specific data-label content for each table */
-    /* Manage Loans Table - matches actual columns in loan.html:
-       1 Loan ID, 2 Customer Name, 3 Amount, 4 Type, 5 Status, 6 Actions */
-    #manageLoansTable td:nth-of-type(1):before { content: "Loan ID:"; }
-    #manageLoansTable td:nth-of-type(2):before { content: "Customer Name:"; }
-    #manageLoansTable td:nth-of-type(3):before { content: "Amount:"; }
-    #manageLoansTable td:nth-of-type(4):before { content: "Type:"; }
-    #manageLoansTable td:nth-of-type(5):before { content: "Status:"; }
-    #manageLoansTable td:nth-of-type(6):before { content: "Actions:"; }
-
-    /* Approve Loans Table - matches actual columns in loan.html:
-       1 Loan ID, 2 Customer Name, 3 Amount, 4 Type, 5 Status, 6 Actions */
-    #approveLoansTable td:nth-of-type(1):before { content: "Loan ID:"; }
-    #approveLoansTable td:nth-of-type(2):before { content: "Customer Name:"; }
-    #approveLoansTable td:nth-of-type(3):before { content: "Amount:"; }
-    #approveLoansTable td:nth-of-type(4):before { content: "Type:"; }
-    #approveLoansTable td:nth-of-type(5):before { content: "Status:"; }
-    #approveLoansTable td:nth-of-type(6):before { content: "Actions:"; }
-
-    /* Queried Payments Table (if still used here) */
-    #queriedPaymentsTable td:nth-of-type(1):before { content: "Loan ID:"; }
-    #queriedPaymentsTable td:nth-of-type(2):before { content: "Customer Name:"; }
-    #queriedPaymentsTable td:nth-of-type(3):before { content: "Amount Due:"; }
-    #queriedPaymentsTable td:nth-of-type(4):before { content: "Due Date:"; }
-    #queriedPaymentsTable td:nth-of-type(5):before { content: "Status:"; }
 
 
     /* Loan Details Modal responsiveness */
