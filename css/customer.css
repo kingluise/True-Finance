@@ -39,25 +39,31 @@
     width: 250px;
     height: 100vh;
     background: rgba(0, 0, 0, 0.9); /* Darker sidebar */
-    padding: 20px;
+    padding: 15px;
     position: fixed;
     left: 0;
     top: 0;
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5); /* Added shadow for depth */
-    z-index: 1002;
+    z-index: 1001;
     box-sizing: border-box;
+    overflow-y: auto; /* lets the menu scroll internally if it's taller than the viewport */
 }
 
 .logo-title {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 30px;
 }
 
 .logo {
-    width: 80px;
-    margin-bottom: 15px;
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar h2 {
@@ -74,7 +80,7 @@
 }
 
 .menu li {
-    margin: 20px 0;
+    margin: 15px 0;
 }
 
 .menu a {
@@ -99,7 +105,7 @@
     position: fixed;
     top: 12px;
     left: 12px;
-    z-index: 1003;
+    z-index: 1002;
     width: 44px;
     height: 44px;
     font-size: 22px;
@@ -290,17 +296,9 @@ button[type="submit"],
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* ====== Multi-Step Form Styling ====== */
-#customerFormContainer {
-    width: 100%;
-    max-width: 600px; /* Increased max-width */
-    margin: 30px auto; /* Increased margin */
-    padding: 30px; /* Increased padding */
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-    box-sizing: border-box;
-}
+/* ====== Multi-Step Form Styling ======
+   Note: #customerFormContainer is the .modal overlay itself (fixed, full-screen).
+   The visible white card is .modal-content, styled in customer.html's <style> block. */
 
 form {
     display: flex;
@@ -442,10 +440,6 @@ button.next-step:hover, button.prev-step:hover, button[type="submit"]:hover {
         padding-top: 70px; /* room for the fixed menu toggle button */
     }
 
-    #customerFormContainer {
-        width: 90%;
-    }
-
     table {
         font-size: 14px;
     }
@@ -456,8 +450,9 @@ button.next-step:hover, button.prev-step:hover, button[type="submit"]:hover {
 
     .modal-content {
         width: 92% !important;
-        margin: 5% auto !important;
-        padding: 15px !important;
+        max-height: 85vh !important;
+        margin: 0 !important;
+        padding: 20px !important;
     }
 
     .details-section .image-container img {

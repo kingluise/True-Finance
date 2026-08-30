@@ -20,16 +20,22 @@ body {
     flex-direction: column;
     z-index: 1001;
     box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .logo-title {
-    text-align: center;
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
 }
 
 .logo {
-    width: 80px;
-    margin-bottom: 10px;
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar h2 {

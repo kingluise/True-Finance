@@ -55,7 +55,9 @@ body {
     flex-direction: column;
     border-radius: 0 10px 10px 0; /* Consistent rounded corners */
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    z-index: 1002;
+    z-index: 1001;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .logo-title {
@@ -121,7 +123,7 @@ body {
     position: fixed;
     top: 12px;
     left: 12px;
-    z-index: 1003;
+    z-index: 1002;
     width: 44px;
     height: 44px;
     font-size: 22px;
