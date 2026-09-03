@@ -79,7 +79,7 @@ body {
     100% { transform: rotate(360deg); }
 }
 
-/* Sidebar Styling - Adapted for consistency with your other admin pages */
+/* Sidebar Styling - matches the pattern used on dashboard/customer/loan/payment pages */
 .sidebar {
     width: 250px;
     height: 100vh; /* Full height */
@@ -92,6 +92,9 @@ body {
     flex-direction: column;
     border-radius: 0 10px 10px 0; /* Rounded right corners */
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .logo-title {
@@ -151,12 +154,48 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Mobile menu toggle button (hidden on desktop) */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1002;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    line-height: 1;
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Overlay behind sidebar when open on mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.sidebar-overlay.visible {
+    display: block;
+}
+
 /* Main Content Styling */
 .container {
     flex-grow: 1; /* Allow content to take remaining space */
     margin-left: 270px; /* Offset for fixed sidebar */
     padding: 30px; /* Increased padding */
     background-color: #ecf0f1; /* Light grey background for content, contrasting with body gradient */
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 /* Section Specific Styles (common for forms/tables) */
@@ -280,6 +319,7 @@ h3 {
 /* Table Styling */
 #loanNotificationsTable {
     width: 100%;
+    min-width: 680px; /* keeps columns readable (now 6 cols incl. Type); scrolls under .table-container on mobile */
     border-collapse: collapse;
     margin-top: 20px;
     background: white;
@@ -368,15 +408,26 @@ h3 {
     }
 
     .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative; /* Make it flow with content */
+        left: -270px;
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        transition: left 0.3s ease;
         border-radius: 0;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .menu-toggle {
+        display: block;
     }
 
     .container {
         margin-left: 0; /* Remove sidebar offset */
         padding: 20px 15px; /* Adjust padding */
+        padding-top: 70px; /* room for the fixed menu toggle button */
     }
 
     #notificationsManagement {
@@ -390,37 +441,21 @@ h3 {
 
     .submit-button, .cancel-button {
         width: 100%; /* Full width buttons */
+        padding: 10px 16px;
+        font-size: 0.95em;
     }
 
-    /* Responsive tables: stack cells */
-    table, th, td {
-        display: block;
+    /* Table now scrolls horizontally via .table-container instead of stacking into cards,
+       matching the pattern used on the other pages. */
+    #loanNotificationsTable {
+        font-size: 14px;
     }
 
-    th {
-        display: none; /* Hide table headers on small screens */
+    .repayments-summary {
+        margin-top: 10px;
     }
 
-    td {
-        text-align: right;
-        padding-left: 50%;
-        position: relative;
+    .term-filter-group {
+        margin-bottom: 15px;
     }
-
-    td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 0;
-        width: 50%;
-        padding-left: 15px;
-        font-weight: bold;
-        text-align: left;
-    }
-
-    /* Specific data-label content for loanNotificationsTable */
-    #loanNotificationsTable td:nth-of-type(1):before { content: "Loan ID:"; }
-    #loanNotificationsTable td:nth-of-type(2):before { content: "Customer Name:"; }
-    #loanNotificationsTable td:nth-of-type(3):before { content: "Amount Due:"; }
-    #loanNotificationsTable td:nth-of-type(4):before { content: "Due Date:"; }
-    #loanNotificationsTable td:nth-of-type(5):before { content: "Status:"; }
 }

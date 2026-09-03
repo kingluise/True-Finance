@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const duePaymentsEl = document.getElementById('due-payments');
     const totalPrincipalEl = document.getElementById('total-principal');
     const totalInterestEl = document.getElementById('total-interest');
+    const dueMonthActualEl = document.getElementById('due-month-actual');
+    const dueMonthPaidEl = document.getElementById('due-month-paid');
+    const totalLoanBookValueEl = document.getElementById('total-loan-book-value');
+    const totalActiveLoanValueEl = document.getElementById('total-active-loan-value');
     const transactionsTable = document.querySelector('.transactions table');
     const logoutBtn = document.getElementById('logout');
     const loanChartCanvas = document.getElementById('loanChart');
@@ -105,6 +109,28 @@ document.addEventListener('DOMContentLoaded', () => {
         duePaymentsEl.textContent = data.duePaymentsToday !== undefined ? `₦${data.duePaymentsToday.toLocaleString()}` : '₦0';
         totalPrincipalEl.textContent = data.totalPrincipal !== undefined ? `₦${data.totalPrincipal.toLocaleString()}` : '₦0';
         totalInterestEl.textContent = data.totalInterest !== undefined ? `₦${data.totalInterest.toLocaleString()}` : '₦0';
+
+        // ✅ Due Payments (This Month): Actual vs Paid
+        if (dueMonthActualEl) {
+            dueMonthActualEl.textContent = data.duePaymentsThisMonthActual !== undefined
+                ? `₦${data.duePaymentsThisMonthActual.toLocaleString()}` : '₦0';
+        }
+        if (dueMonthPaidEl) {
+            dueMonthPaidEl.textContent = data.duePaymentsThisMonthPaid !== undefined
+                ? `₦${data.duePaymentsThisMonthPaid.toLocaleString()}` : '₦0';
+        }
+
+        // ✅ Total Loan Book Value
+        if (totalLoanBookValueEl) {
+            totalLoanBookValueEl.textContent = data.totalLoanBookValue !== undefined
+                ? `₦${data.totalLoanBookValue.toLocaleString()}` : '₦0';
+        }
+
+        // ✅ Total Active Loan Value
+        if (totalActiveLoanValueEl) {
+            totalActiveLoanValueEl.textContent = data.totalActiveLoanValue !== undefined
+                ? `₦${data.totalActiveLoanValue.toLocaleString()}` : '₦0';
+        }
     };
 
     // Function to update the transactions table

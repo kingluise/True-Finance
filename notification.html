@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loan Notifications</title>
-    <link rel="icon" type="image/x-icon" href="/images/">
+    <link rel="icon" type="image/x-icon" href="/images/firstlend.png">
     <link rel="stylesheet" href="css/notification.css"> <!-- Ensure this CSS exists -->
     <script src="js/config.js" defer></script>
      <!-- jsPDF & AutoTable -->
@@ -154,6 +154,85 @@
         tbody tr:hover td:before {
             opacity: 1;
         }
+
+        .repayments-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 15px 0 20px;
+        }
+
+        .summary-item {
+            flex: 1;
+            min-width: 160px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 14px 18px;
+            text-align: center;
+        }
+
+        .summary-item.summary-grand-total {
+            background: #14213D;
+            border-color: #14213D;
+        }
+
+        .summary-item.summary-grand-total .summary-label,
+        .summary-item.summary-grand-total .summary-value {
+            color: #fff;
+        }
+
+        .summary-label {
+            display: block;
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .summary-value {
+            display: block;
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #14213D;
+        }
+
+        .term-filter-group {
+            max-width: 260px;
+        }
+
+        #termTypeFilter {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #termTypeFilter:focus {
+            border-color: #FCA311;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(252, 163, 17, 0.2);
+        }
+
+        @media (max-width: 480px) {
+            .term-filter-group {
+                max-width: 100%;
+            }
+
+            .summary-item {
+                min-width: 130px;
+                padding: 12px 14px;
+            }
+
+            .summary-value {
+                font-size: 1.1em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -167,7 +246,11 @@
     <!-- Custom Alert Container -->
     <div id="customAlertContainer"></div>
 
-    <div class="sidebar">
+    <!-- Mobile menu toggle -->
+    <button id="menuToggle" class="menu-toggle" aria-label="Toggle menu">☰</button>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="sidebar" id="sidebar">
         <div class="logo-title">
             <img src="images/firstlend.png" alt="Logo" class="logo">
             <h2>FIRST LEND</h2>
@@ -210,12 +293,60 @@
             <!-- Loan Notifications Table -->
             <div id="loanNotificationsTableContainer" class="table-section card">
                 <h3>Due Repayments List</h3>
+
+                <div class="form-group term-filter-group">
+                    <label for="termTypeFilter">Filter by Loan Type:</label>
+                    <select id="termTypeFilter">
+                        <option value="all">All</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+
+                <div id="repaymentsSummary" class="repayments-summary hidden">
+                    <div class="summary-item">
+                        <span class="summary-label">Weekly Total</span>
+                        <span id="weeklyTotal" class="summary-value">₦0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Monthly Total</span>
+                        <span id="monthlyTotal" class="summary-value">₦0</span>
+                    </div>
+                    <div class="summary-item summary-grand-total">
+                        <span class="summary-label">Grand Total</span>
+                        <span id="grandTotal" class="summary-value">₦0</span>
+                    </div>
+                </div>
+
+                <div id="principalInterestSummary" class="repayments-summary hidden">
+                    <div class="summary-item">
+                        <span class="summary-label">Principal (This Query)</span>
+                        <span id="principalTotal" class="summary-value">₦0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Interest (This Query)</span>
+                        <span id="interestTotal" class="summary-value">₦0</span>
+                    </div>
+                </div>
+
+                <div id="thisWeekSummary" class="repayments-summary hidden">
+                    <div class="summary-item">
+                        <span class="summary-label">This Week - Actual (Due)</span>
+                        <span id="thisWeekActualTotal" class="summary-value">₦0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">This Week - Paid</span>
+                        <span id="thisWeekPaidTotal" class="summary-value">₦0</span>
+                    </div>
+                </div>
+
                 <div class="table-container">
                     <table id="loanNotificationsTable">
                         <thead>
                             <tr>
                                 <th>Loan ID</th>
                                 <th>Customer Name</th>
+                                <th>Type</th>
                                 <th>Amount Due</th>
                                 <th>Due Date</th>
                                 <th>Status</th>
@@ -223,7 +354,7 @@
                         </thead>
                         <tbody id="loanNotificationsTableBody">
                             <!-- Loan notifications/due repayments will be inserted here by JavaScript -->
-                            <tr><td colspan="5" style="text-align: center;">Select a date range and click Query Payments.</td></tr>
+                            <tr><td colspan="6" style="text-align: center;">Select a date range and click Query Payments.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -249,6 +380,36 @@
                     rollingLoader.style.display = 'none';
                 }
             }, 1000);
+        });
+
+        // Mobile sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                overlay.classList.add('visible');
+            }
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('visible');
+            }
+
+            menuToggle?.addEventListener('click', () => {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            overlay?.addEventListener('click', closeSidebar);
+
+            sidebar?.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeSidebar);
+            });
         });
     </script>
 </body>

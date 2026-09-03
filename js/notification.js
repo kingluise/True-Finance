@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let currentRepayments = []; // store repayments for export
+    let currentRepayments = []; // store all fetched repayments (unfiltered) for export/summary
 
     // DOM Elements
     const queryDuePaymentsForm = document.getElementById('queryDuePaymentsForm');
@@ -10,6 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const notificationsPagination = document.getElementById('notificationsPagination');
     const logoutBtn = document.getElementById('logout');
     const exportPdfBtn = document.getElementById('exportPdfButton'); // PDF button
+    const termTypeFilter = document.getElementById('termTypeFilter');
+    const repaymentsSummary = document.getElementById('repaymentsSummary');
+    const weeklyTotalEl = document.getElementById('weeklyTotal');
+    const monthlyTotalEl = document.getElementById('monthlyTotal');
+    const grandTotalEl = document.getElementById('grandTotal');
+    const principalInterestSummary = document.getElementById('principalInterestSummary');
+    const principalTotalEl = document.getElementById('principalTotal');
+    const interestTotalEl = document.getElementById('interestTotal');
+    const thisWeekSummary = document.getElementById('thisWeekSummary');
+    const thisWeekActualTotalEl = document.getElementById('thisWeekActualTotal');
+    const thisWeekPaidTotalEl = document.getElementById('thisWeekPaidTotal');
 
     // Utility function for showing custom alerts
     const showCustomAlert = (message, type) => {
@@ -56,9 +67,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clearQueryButton) {
         clearQueryButton.addEventListener('click', () => {
             queryDuePaymentsForm.reset();
-            loanNotificationsTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Select a date range and click Query Payments.</td></tr>';
+            loanNotificationsTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Select a date range and click Query Payments.</td></tr>';
             notificationsPagination.innerHTML = '';
             currentRepayments = [];
+            if (termTypeFilter) termTypeFilter.value = 'all';
+            repaymentsSummary?.classList.add('hidden');
+            principalInterestSummary?.classList.add('hidden');
+            thisWeekSummary?.classList.add('hidden');
+        });
+    }
+
+    // Re-render (filtered table + summary) whenever the filter changes
+    if (termTypeFilter) {
+        termTypeFilter.addEventListener('change', () => {
+            renderNotificationsTable(currentRepayments);
         });
     }
 
@@ -90,13 +112,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
-            currentRepayments = data; // store for export
-            renderNotificationsTable(data);
+            currentRepayments = data; // store full unfiltered set for export/summary
+            renderNotificationsTable(currentRepayments);
 
         } catch (error) {
             console.error('Failed to fetch due repayments:', error);
             showCustomAlert('Failed to load due repayments. Please try again.', 'error');
-            loanNotificationsTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Failed to load repayments.</td></tr>';
+            loanNotificationsTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Failed to load repayments.</td></tr>';
+            repaymentsSummary?.classList.add('hidden');
+            principalInterestSummary?.classList.add('hidden');
+            thisWeekSummary?.classList.add('hidden');
         }
     };
 
@@ -112,20 +137,145 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Function to render data in the table
+    // Formats a currency total consistently
+    const formatCurrency = (amount) => `₦${amount.toLocaleString()}`;
+
+    // Computes and renders the Principal vs Interest breakdown for the FULL
+    // queried result set (the date range from the form), not affected by the type filter.
+    const renderPrincipalInterestSummary = (repayments) => {
+        if (!repayments || !repayments.length) {
+            principalInterestSummary?.classList.add('hidden');
+            return;
+        }
+
+        let totalPrincipal = 0;
+        let totalInterest = 0;
+
+        repayments.forEach(r => {
+            totalPrincipal += r.principalPortion || 0;
+            totalInterest += r.interestPortion || 0;
+        });
+
+        principalTotalEl.textContent = formatCurrency(totalPrincipal);
+        interestTotalEl.textContent = formatCurrency(totalInterest);
+        principalInterestSummary?.classList.remove('hidden');
+    };
+
+    // Returns { start, end } for the current calendar week (Monday 00:00:00
+    // through Sunday 23:59:59.999), based on today's actual date.
+    const getCurrentWeekRange = () => {
+        const now = new Date();
+        const day = now.getDay(); // 0 = Sun, 1 = Mon, ... 6 = Sat
+        const diffToMonday = (day === 0 ? -6 : 1) - day;
+
+        const start = new Date(now);
+        start.setDate(now.getDate() + diffToMonday);
+        start.setHours(0, 0, 0, 0);
+
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6);
+        end.setHours(23, 59, 59, 999);
+
+        return { start, end };
+    };
+
+    // Computes and renders the "This Week" card: Actual (Due) vs Paid, for
+    // repayments whose dueDate falls within the current Mon-Sun week, drawn
+    // from the FULL currentRepayments set regardless of the queried date
+    // range or the type filter.
+    const renderThisWeekSummary = (repayments) => {
+        if (!repayments || !repayments.length) {
+            thisWeekSummary?.classList.add('hidden');
+            return;
+        }
+
+        const { start, end } = getCurrentWeekRange();
+
+        const dueThisWeek = repayments.filter(r => {
+            const dueDate = new Date(r.dueDate);
+            return dueDate >= start && dueDate <= end;
+        });
+
+        if (!dueThisWeek.length) {
+            thisWeekSummary?.classList.add('hidden');
+            return;
+        }
+
+        let actualTotal = 0;
+        let paidTotal = 0;
+
+        dueThisWeek.forEach(r => {
+            actualTotal += r.totalAmount;
+            if (r.status === 1) { // 1 = Paid
+                paidTotal += r.totalAmount;
+            }
+        });
+
+        thisWeekActualTotalEl.textContent = formatCurrency(actualTotal);
+        thisWeekPaidTotalEl.textContent = formatCurrency(paidTotal);
+        thisWeekSummary?.classList.remove('hidden');
+    };
+
+    // Computes and renders the Weekly / Monthly / Grand totals from the FULL
+    // queried result set (not affected by the type filter), so the breakdown
+    // is always visible regardless of which rows are currently listed.
+    const renderSummary = (repayments) => {
+        if (!repayments || !repayments.length) {
+            repaymentsSummary?.classList.add('hidden');
+            return;
+        }
+
+        let weeklyTotal = 0;
+        let monthlyTotal = 0;
+
+        repayments.forEach(r => {
+            const termType = (r.termType || '').toLowerCase();
+            if (termType === 'weekly') {
+                weeklyTotal += r.totalAmount;
+            } else if (termType === 'monthly') {
+                monthlyTotal += r.totalAmount;
+            }
+        });
+
+        weeklyTotalEl.textContent = formatCurrency(weeklyTotal);
+        monthlyTotalEl.textContent = formatCurrency(monthlyTotal);
+        grandTotalEl.textContent = formatCurrency(weeklyTotal + monthlyTotal);
+        repaymentsSummary?.classList.remove('hidden');
+    };
+
+    // Function to render data in the table, applying the current type filter
     const renderNotificationsTable = (repayments) => {
         loanNotificationsTableBody.innerHTML = '';
 
         if (!repayments || !Array.isArray(repayments) || repayments.length === 0) {
-            loanNotificationsTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No due repayments found for the selected date range.</td></tr>';
+            loanNotificationsTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No due repayments found for the selected date range.</td></tr>';
+            repaymentsSummary?.classList.add('hidden');
+            principalInterestSummary?.classList.add('hidden');
+            thisWeekSummary?.classList.add('hidden');
             return;
         }
 
-        repayments.forEach(repayment => {
+        // Summary always reflects the full queried range, regardless of the filter
+        renderSummary(repayments);
+        renderPrincipalInterestSummary(repayments);
+        renderThisWeekSummary(repayments);
+
+        const selectedType = termTypeFilter ? termTypeFilter.value : 'all';
+        const filtered = selectedType === 'all'
+            ? repayments
+            : repayments.filter(r => (r.termType || '').toLowerCase() === selectedType);
+
+        if (!filtered.length) {
+            loanNotificationsTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">No ${selectedType} repayments found for the selected date range.</td></tr>`;
+            return;
+        }
+
+        filtered.forEach(repayment => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${repayment.loanId}</td>
                 <td>${repayment.customerName}</td>
+                <td>${repayment.termType || '-'}</td>
                 <td>₦${repayment.totalAmount.toLocaleString()}</td>
                 <td>${new Date(repayment.dueDate).toLocaleDateString()}</td>
                 <td>${getStatusText(repayment.status)}</td>
@@ -156,17 +306,24 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.text(`Period: ${new Date(fromDate).toLocaleDateString()} - ${new Date(toDate).toLocaleDateString()}`, 14, 25);
         }
 
+        // Respect the current filter in the export too
+        const selectedType = termTypeFilter ? termTypeFilter.value : 'all';
+        const exportRows = selectedType === 'all'
+            ? currentRepayments
+            : currentRepayments.filter(r => (r.termType || '').toLowerCase() === selectedType);
+
         // Table data
-        const rows = currentRepayments.map(r => [
+        const rows = exportRows.map(r => [
             r.loanId,
             r.customerName,
+            r.termType || '-',
             `₦${r.totalAmount.toLocaleString()}`,
             new Date(r.dueDate).toLocaleDateString(),
             getStatusText(r.status)
         ]);
 
         doc.autoTable({
-            head: [["Loan ID", "Customer", "Amount", "Due Date", "Status"]],
+            head: [["Loan ID", "Customer", "Type", "Amount", "Due Date", "Status"]],
             body: rows,
             startY: 35,
         });
