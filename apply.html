@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for a Loan | First Lend</title>
+    <link rel="icon" type="image/x-icon" href="/images/firstlend.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/config.js" defer></script>
+
+    <style>
+        :root {
+            --navy-950: #0F1830;
+            --navy-800: #14213D;
+            --navy-600: #21335C;
+            --gold-500: #FCA311;
+            --gold-600: #E0900A;
+            --gold-100: #FFF3DD;
+            --paper: #FBF9F4;
+            --ink: #1B2430;
+            --muted: #6B7280;
+            --line: #E7E2D6;
+            --success: #2F7D4F;
+            --success-bg: #EAF6EE;
+            --error: #B3261E;
+            --error-bg: #FDECEA;
+            --radius: 10px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--ink);
+            background: var(--paper);
+        }
+
+        h1, h2, h3, legend {
+            font-family: 'Newsreader', Georgia, serif;
+        }
+
+        /* ============ HERO / LANDING ============ */
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background:
+                radial-gradient(60% 50% at 82% 12%, rgba(252, 163, 17, 0.16), transparent 60%),
+                linear-gradient(160deg, var(--navy-950) 0%, var(--navy-800) 55%, var(--navy-600) 100%);
+            padding: 60px 20px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .hero.is-hidden {
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .hero-art {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.55;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            max-width: 560px;
+            text-align: center;
+        }
+
+        .hero-logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.06);
+            margin-bottom: 22px;
+        }
+
+        .hero-headline {
+            font-size: clamp(2.1em, 5vw, 3em);
+            font-weight: 500;
+            line-height: 1.15;
+            color: #FBF9F4;
+            margin: 0 0 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .hero-sub {
+            color: #C7CEDC;
+            font-size: 1.05em;
+            line-height: 1.6;
+            margin: 0 0 34px;
+            max-width: 46ch;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            appearance: none;
+            border: none;
+            background: var(--gold-500);
+            color: var(--navy-950);
+            font-size: 1.02em;
+            font-weight: 600;
+            padding: 15px 36px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background 0.25s ease, transform 0.15s ease;
+        }
+
+        .hero-cta:hover { background: #FFB733; }
+        .hero-cta:active { transform: scale(0.98); }
+        .hero-cta:focus-visible {
+            outline: 3px solid #FBF9F4;
+            outline-offset: 3px;
+        }
+
+        .hero-foot {
+            margin-top: 22px;
+            color: #8B94AB;
+            font-size: 0.85em;
+        }
+
+        /* ============ FORM PAGE ============ */
+
+        .form-page {
+            min-height: 100vh;
+            padding: 56px 16px 80px;
+            opacity: 0;
+            transform: translateY(14px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .form-page.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .form-page.is-hidden { display: none; }
+
+        .apply-container {
+            max-width: 640px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: 0 24px 60px rgba(15, 24, 48, 0.12);
+            padding: 40px;
+        }
+
+        .apply-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 26px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .apply-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-bottom: 14px;
+        }
+
+        .apply-header h2 {
+            font-size: 1.6em;
+            font-weight: 500;
+            color: var(--navy-800);
+            margin: 0 0 8px;
+        }
+
+        .apply-header p {
+            color: var(--muted);
+            margin: 0;
+            font-size: 0.95em;
+        }
+
+        .req-mark { color: var(--gold-600); }
+
+        fieldset {
+            border: none;
+            padding: 0;
+            margin: 0 0 32px;
+        }
+
+        legend {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            color: var(--navy-800);
+            font-size: 1.15em;
+            padding-bottom: 10px;
+            margin-bottom: 18px;
+            width: 100%;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .step-no {
+            flex: 0 0 auto;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--navy-800);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #343a40;
+            font-size: 0.92em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #DADCE0;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: var(--ink);
+            background: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--gold-500);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(252, 163, 17, 0.18);
+        }
+
+        .field-hint {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.82em;
+            color: var(--muted);
+        }
+
+        .currency-input {
+            position: relative;
+        }
+
+        .currency-input span {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        .currency-input input {
+            padding-left: 30px;
+        }
+
+        .rate-note {
+            background: var(--gold-100);
+            border: 1px solid #F1D08A;
+            border-radius: 8px;
+            padding: 13px 16px;
+            font-size: 0.9em;
+            color: #7A5B00;
+            margin-top: 4px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: var(--navy-800);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.25s ease;
+        }
+
+        button[type="submit"]:hover { background: var(--gold-600); }
+
+        button[type="submit"]:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #formMessage {
+            margin-top: 16px;
+            padding: 13px 16px;
+            border-radius: 8px;
+            font-size: 0.92em;
+            display: none;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        #formMessage.error {
+            display: flex;
+            background: var(--error-bg);
+            color: var(--error);
+            border: 1px solid #F3C6C2;
+        }
+
+        #formMessage .msg-icon { flex: 0 0 auto; line-height: 1; margin-top: 1px; }
+
+        /* ============ SUCCESS PANEL ============ */
+
+        .success-panel {
+            text-align: center;
+            padding: 20px 6px 6px;
+        }
+
+        .success-panel.hidden { display: none; }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--success-bg);
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .success-panel h3 {
+            font-size: 1.4em;
+            font-weight: 500;
+            color: var(--navy-800);
+            margin: 0 0 10px;
+        }
+
+        .success-panel p {
+            color: var(--muted);
+            line-height: 1.6;
+            max-width: 40ch;
+            margin: 0 auto 26px;
+        }
+
+        .ghost-btn {
+            appearance: none;
+            background: transparent;
+            border: 1px solid var(--navy-800);
+            color: var(--navy-800);
+            padding: 12px 26px;
+            border-radius: 999px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .ghost-btn:hover { background: var(--navy-800); color: #fff; }
+
+        @media (max-width: 560px) {
+            .apply-container { padding: 26px 20px; }
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero, .form-page { transition: none; }
+            html { scroll-behavior: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============ HERO / LANDING ============ -->
+    <section class="hero" id="heroSection">
+        <svg class="hero-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g stroke="#FCA311" stroke-width="1" opacity="0.18">
+                <line x1="0" y1="620" x2="1200" y2="480" />
+                <line x1="0" y1="680" x2="1200" y2="540" />
+                <line x1="0" y1="740" x2="1200" y2="600" />
+            </g>
+            <g fill="#FCA311">
+                <circle cx="180" cy="140" r="2.5" opacity="0.5" />
+                <circle cx="960" cy="200" r="2" opacity="0.4" />
+                <circle cx="1080" cy="620" r="3" opacity="0.35" />
+                <circle cx="120" cy="560" r="2" opacity="0.3" />
+                <circle cx="620" cy="90" r="2" opacity="0.4" />
+            </g>
+            <g stroke="#FBF9F4" stroke-width="1" opacity="0.08">
+                <rect x="700" y="500" width="90" height="180" />
+                <rect x="810" y="440" width="90" height="240" />
+                <rect x="920" y="380" width="90" height="300" />
+            </g>
+        </svg>
+
+        <div class="hero-inner">
+            <img class="hero-logo" src="images/firstlend.png" alt="First Lend">
+            <h1 class="hero-headline">Borrow with confidence.</h1>
+            <p class="hero-sub">Tell us a little about yourself and the funds you need. Our team reviews every application personally, usually within one business day.</p>
+            <button type="button" id="applyNowBtn" class="hero-cta">Apply now</button>
+            <p class="hero-foot">Takes about five minutes &middot; No impact on your credit score</p>
+        </div>
+    </section>
+
+    <!-- ============ APPLICATION FORM ============ -->
+    <section class="form-page" id="formSection">
+        <div class="apply-container">
+
+            <div class="apply-header">
+                <img src="images/firstlend.png" alt="First Lend Logo" class="apply-logo">
+                <h2>Loan application</h2>
+                <p>Fields marked <span class="req-mark">*</span> are required. Please have your ID, NIN and BVN on hand.</p>
+            </div>
+
+            <form id="applicationForm">
+                <fieldset>
+                    <legend><span class="step-no">1</span> Personal information</legend>
+
+                    <div class="form-group">
+                        <label for="fullName">Full name <span class="req-mark">*</span></label>
+                        <input type="text" id="fullName" placeholder="e.g. Adaeze Okafor" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date of birth <span class="req-mark">*</span></label>
+                            <input type="date" id="dateOfBirth" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender <span class="req-mark">*</span></label>
+                            <select id="gender" required>
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maritalStatus">Marital status <span class="req-mark">*</span></label>
+                        <select id="maritalStatus" required>
+                            <option value="">Select</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="residentialAddress">Residential address <span class="req-mark">*</span></label>
+                        <input type="text" id="residentialAddress" placeholder="Street, city, state" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email <span class="req-mark">*</span></label>
+                        <input type="email" id="email" placeholder="e.g. jane.doe@email.com" required>
+                        <span class="field-hint">We'll send your application confirmation to this address.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone number <span class="req-mark">*</span></label>
+                        <input type="tel" id="phoneNumber" placeholder="e.g. 0803 123 4567" required>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend><span class="step-no">2</span> Employment &amp; identification</legend>
+
+                    <div class="form-group">
+                        <label for="employmentStatus">Employment status <span class="req-mark">*</span></label>
+                        <select id="employmentStatus" required>
+                            <option value="">Select</option>
+                            <option value="Employed">Employed</option>
+                            <option value="Self-Employed">Self-Employed</option>
+                            <option value="Unemployed">Unemployed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="monthlyIncome">Monthly income <span class="req-mark">*</span></label>
+                        <div class="currency-input">
+                            <span>&#8358;</span>
+                            <input type="number" id="monthlyIncome" min="0" placeholder="0.00" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="idType">ID type <span class="req-mark">*</span></label>
+                            <input type="text" id="idType" placeholder="e.g. National ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="idNumber">ID number <span class="req-mark">*</span></label>
+                            <input type="text" id="idNumber" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nin">NIN <span class="req-mark">*</span></label>
+                            <input type="text" id="nin" placeholder="11 digits" inputmode="numeric" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bvn">BVN <span class="req-mark">*</span></label>
+                            <input type="text" id="bvn" placeholder="11 digits" inputmode="numeric" required>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend><span class="step-no">3</span> Guarantor information</legend>
+
+                    <div class="form-group">
+                        <label for="guarantorFullName">Guarantor full name <span class="req-mark">*</span></label>
+                        <input type="text" id="guarantorFullName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guarantorRelationship">Relationship to you <span class="req-mark">*</span></label>
+                        <input type="text" id="guarantorRelationship" placeholder="e.g. Sibling, colleague, friend" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="guarantorAddress">Guarantor address <span class="req-mark">*</span></label>
+                        <input type="text" id="guarantorAddress" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="guarantorPhone">Guarantor phone <span class="req-mark">*</span></label>
+                            <input type="tel" id="guarantorPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guarantorEmail">Guarantor email <span class="req-mark">*</span></label>
+                            <input type="email" id="guarantorEmail" placeholder="e.g. name@email.com" required>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend><span class="step-no">4</span> Loan details</legend>
+
+                    <div class="form-group">
+                        <label for="loanAmount">Loan amount <span class="req-mark">*</span></label>
+                        <div class="currency-input">
+                            <span>&#8358;</span>
+                            <input type="number" id="loanAmount" min="1000" placeholder="0.00" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="loanTerm">Loan term <span class="req-mark">*</span></label>
+                            <select id="loanTerm" required>
+                                <option value="">Select</option>
+                                <option value="Weekly">Weekly</option>
+                                <option value="Monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="duration">Duration <span class="req-mark">*</span></label>
+                            <input type="number" id="duration" min="1" max="23" placeholder="1&ndash;23" required>
+                            <span class="field-hint" id="durationHint">Number of weeks or months, based on the term selected.</span>
+                        </div>
+                    </div>
+
+                    <div class="rate-note">
+                        A fixed interest rate of <strong>35%</strong> applies to all loan applications submitted through this form.
+                    </div>
+                </fieldset>
+
+                <button type="submit" id="submitBtn">Submit application</button>
+                <div id="formMessage" role="status" aria-live="polite"></div>
+            </form>
+
+            <div id="successPanel" class="success-panel hidden" role="status" aria-live="polite">
+                <div class="success-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>Application received</h3>
+                <p id="successText">Thank you. Our team will review your details and reach out shortly.</p>
+                <button type="button" id="newApplicationBtn" class="ghost-btn">Submit another application</button>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        // ============ Hero reveal (UI only — no submission logic here) ============
+        const heroSection = document.getElementById('heroSection');
+        const formSection = document.getElementById('formSection');
+        const applyNowBtn = document.getElementById('applyNowBtn');
+
+        formSection.classList.add('is-hidden');
+
+        applyNowBtn.addEventListener('click', () => {
+            heroSection.classList.add('is-hidden');
+            formSection.classList.remove('is-hidden');
+            requestAnimationFrame(() => formSection.classList.add('is-visible'));
+            document.getElementById('fullName').focus({ preventScroll: true });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Purely descriptive helper text — does not affect validation or payload
+        const loanTermSelect = document.getElementById('loanTerm');
+        const durationHint = document.getElementById('durationHint');
+        loanTermSelect.addEventListener('change', () => {
+            const unit = loanTermSelect.value === 'Weekly' ? 'weeks' : loanTermSelect.value === 'Monthly' ? 'months' : 'weeks or months';
+            durationHint.textContent = `Number of ${unit} (1\u201323), based on the term selected.`;
+        });
+
+        // ============ Original submission logic, unchanged ============
+        const successPanel = document.getElementById('successPanel');
+        const applicationForm = document.getElementById('applicationForm');
+
+        document.getElementById('newApplicationBtn').addEventListener('click', () => {
+            applicationForm.reset();
+            applicationForm.style.display = '';
+            successPanel.classList.add('hidden');
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit application';
+            durationHint.textContent = 'Number of weeks or months, based on the term selected.';
+        });
+
+        applicationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const formMessage = document.getElementById('formMessage');
+            formMessage.className = '';
+            formMessage.innerHTML = '';
+
+            const payload = {
+                fullName: document.getElementById('fullName').value,
+                dateOfBirth: document.getElementById('dateOfBirth').value,
+                gender: document.getElementById('gender').value,
+                maritalStatus: document.getElementById('maritalStatus').value,
+                residentialAddress: document.getElementById('residentialAddress').value,
+                email: document.getElementById('email').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                employmentStatus: document.getElementById('employmentStatus').value,
+                monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value) || 0,
+                idType: document.getElementById('idType').value,
+                idNumber: document.getElementById('idNumber').value,
+                nin: document.getElementById('nin').value,
+                bvn: document.getElementById('bvn').value,
+                guarantor: {
+                    fullName: document.getElementById('guarantorFullName').value,
+                    relationshipToBorrower: document.getElementById('guarantorRelationship').value,
+                    residentialAddress: document.getElementById('guarantorAddress').value,
+                    phoneNumber: document.getElementById('guarantorPhone').value,
+                    email: document.getElementById('guarantorEmail').value
+                },
+                principal: parseFloat(document.getElementById('loanAmount').value) || 0,
+                termType: document.getElementById('loanTerm').value,
+                durationValue: parseInt(document.getElementById('duration').value, 10) || 0
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/PublicApplication/apply`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Something went wrong. Please try again.');
+                }
+
+                // Presentation only: swap the form for the success panel
+                document.getElementById('successText').textContent =
+                    data.message || 'Thank you. Our team will review your details and reach out shortly.';
+                applicationForm.style.display = 'none';
+                successPanel.classList.remove('hidden');
+            } catch (err) {
+                console.error(err);
+                formMessage.className = 'error';
+                formMessage.innerHTML = `
+                    <span class="msg-icon">&#9888;</span>
+                    <span>${err.message || 'Failed to submit application. Please try again.'}</span>
+                `;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit application';
+            }
+        });
+    </script>
+</body>
+</html>
