@@ -17,6 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const successMessageModal = document.getElementById('successMessageModal');
     const successCloseBtn = document.querySelector('#successMessageModal .close-button');
 
+    // Approve Loan modal elements
+    const approveLoanModal = document.getElementById('approveLoanModal');
+    const approveModalCloseBtn = document.getElementById('approveModalCloseBtn');
+    const approveCancelBtn = document.getElementById('approveCancelBtn');
+    const approveConfirmBtn = document.getElementById('approveConfirmBtn');
+    const approveAmountInput = document.getElementById('approveAmountInput');
+    const approveOriginalAmount = document.getElementById('approveOriginalAmount');
+    let currentApproveLoanId = null;
+
     const customerIdInput = document.getElementById('customerId');
     const fullNameInput = document.getElementById('fullName');
     const loanTermSelect = document.getElementById('loanTerm');
@@ -250,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>
                     <button class="action-button view-details-btn" data-loan-id="${loanId}">View</button>
                     ${tableType === 'approve' ? `
-                        <button class="action-button approve-btn" data-loan-id="${loanId}">Approve</button>
+                        <button class="action-button approve-btn" data-loan-id="${loanId}" data-principal="${principal}">Approve</button>
                         <button class="action-button decline-btn" data-loan-id="${loanId}">Decline</button>
                     ` : ''}
                     ${tableType === 'manage' && (status.toLowerCase() === 'approved' || status.toLowerCase() === 'defaulted') ? `
@@ -265,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         tableBody.querySelectorAll('.view-details-btn').forEach(btn => btn.addEventListener('click', (e) => showLoanDetails(e.target.dataset.loanId)));
-        tableBody.querySelectorAll('.approve-btn').forEach(btn => btn.addEventListener('click', (e) => updateLoanStatus(e.target.dataset.loanId, 'approve')));
+        tableBody.querySelectorAll('.approve-btn').forEach(btn => btn.addEventListener('click', (e) => openApproveModal(e.target.dataset.loanId, e.target.dataset.principal)));
         tableBody.querySelectorAll('.decline-btn').forEach(btn => btn.addEventListener('click', (e) => updateLoanStatus(e.target.dataset.loanId, 'reject')));
         tableBody.querySelectorAll('.complete-btn').forEach(btn => btn.addEventListener('click', (e) => updateLoanStatus(e.target.dataset.loanId, 'complete')));
         tableBody.querySelectorAll('.default-btn').forEach(btn => btn.addEventListener('click', (e) => updateLoanStatus(e.target.dataset.loanId, 'default')));
@@ -304,6 +313,75 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('An error occurred. Please try again.');
         }
     };
+
+    // ---
+    // APPROVE LOAN (with editable amount)
+    // ---
+    const openApproveModal = (loanId, principalFromRow) => {
+        currentApproveLoanId = loanId;
+
+        const knownPrincipal = parseFloat(principalFromRow);
+        if (!isNaN(knownPrincipal)) {
+            approveOriginalAmount.textContent = formatCurrency(knownPrincipal, 'NGN');
+            approveAmountInput.value = knownPrincipal;
+        } else {
+            approveOriginalAmount.textContent = '-';
+            approveAmountInput.value = '';
+        }
+
+        showModal(approveLoanModal);
+        approveAmountInput.focus();
+    };
+
+    const confirmApproveLoan = async () => {
+        if (!currentApproveLoanId) return;
+
+        const amount = parseFloat(approveAmountInput.value);
+        if (isNaN(amount) || amount <= 0) {
+            alert('Please enter a valid approved amount greater than zero.');
+            return;
+        }
+
+        const token = getAuthToken();
+        if (!token) {
+            alert('Authentication token is missing. Please log in again.');
+            return;
+        }
+
+        approveConfirmBtn.disabled = true;
+        approveConfirmBtn.textContent = 'Approving...';
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/Loan/approve/${currentApproveLoanId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ newPrincipal: amount })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                hideModal(approveLoanModal);
+                alert(`Loan ${currentApproveLoanId} has been approved.`);
+                fetchLoans('pending', approveLoansTableBody, 'approve');
+            } else {
+                alert(`Error: ${result.message || 'Could not approve loan.'}`);
+            }
+        } catch (error) {
+            console.error('Error approving loan:', error);
+            alert('An error occurred. Please try again.');
+        } finally {
+            approveConfirmBtn.disabled = false;
+            approveConfirmBtn.textContent = 'Confirm Approval';
+        }
+    };
+
+    approveConfirmBtn?.addEventListener('click', confirmApproveLoan);
+    approveCancelBtn?.addEventListener('click', () => hideModal(approveLoanModal));
+    approveModalCloseBtn?.addEventListener('click', () => hideModal(approveLoanModal));
 
     const showLoanDetails = async (loanId) => {
         const token = getAuthToken();
@@ -353,6 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (e) => {
         if (e.target === loanDetailsModal) hideModal(loanDetailsModal);
         if (e.target === successMessageModal) hideModal(successMessageModal);
+        if (e.target === approveLoanModal) hideModal(approveLoanModal);
     });
 
     showSection(null);

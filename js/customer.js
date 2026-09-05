@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchCustomers() {
         const token = localStorage.getItem("token");
         if (!token) {
-            customerListBody.innerHTML = `<tr><td colspan="4">Please log in to view customers.</td></tr>`;
+            customerListBody.innerHTML = `<tr><td colspan="5">Please log in to view customers.</td></tr>`;
             return;
         }
 
@@ -61,13 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
             populateCustomerTable(customersCache);
         } catch (err) {
             console.error("Error fetching customers:", err);
-            customerListBody.innerHTML = `<tr><td colspan="4">Error loading customers</td></tr>`;
+            customerListBody.innerHTML = `<tr><td colspan="5">Error loading customers</td></tr>`;
         }
     }
 
     function populateCustomerTable(customers) {
         if (!customers.length) {
-            customerListBody.innerHTML = `<tr><td colspan="4" class="text-center">No customers found</td></tr>`;
+            customerListBody.innerHTML = `<tr><td colspan="5" class="text-center">No customers found</td></tr>`;
             return;
         }
 
@@ -76,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${idx + 1}</td>
+                <td>${c.id}</td>
                 <td>${c.fullName}</td>
                 <td>${c.phoneNumber}</td>
                 <td>
@@ -100,7 +101,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const filtered = customersCache.filter(c =>
             c.fullName.toLowerCase().includes(query) ||
             c.phoneNumber.toLowerCase().includes(query) ||
-            c.email.toLowerCase().includes(query)
+            c.email.toLowerCase().includes(query) ||
+            String(c.id).toLowerCase().includes(query)
         );
         populateCustomerTable(filtered);
     });

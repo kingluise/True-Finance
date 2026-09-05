@@ -173,6 +173,88 @@
             background-color: rgba(244, 67, 54, 0.1);
             color: #F44336;
         }
+
+        /* Approve Loan modal — scoped styles so this works regardless of what
+           loan.css already defines, since form-group/submit-button/cancel-button
+           class names aren't guaranteed to exist there. */
+        #approveLoanModal .modal-content {
+            max-width: 420px;
+        }
+
+        #approveLoanModal .approve-note {
+            color: #555;
+            font-size: 0.92em;
+            margin: 0 0 18px;
+            line-height: 1.5;
+        }
+
+        #approveLoanModal .approve-field {
+            margin-bottom: 18px;
+        }
+
+        #approveLoanModal .approve-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #343a40;
+            font-size: 0.92em;
+        }
+
+        #approveLoanModal .approve-field input {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #approveLoanModal .approve-field input:focus {
+            border-color: #FCA311;
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(252, 163, 17, 0.2);
+        }
+
+        #approveLoanModal .approve-field-hint {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.82em;
+            color: #6c757d;
+        }
+
+        #approveLoanModal .approve-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        #approveLoanModal .approve-confirm-btn {
+            background: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s ease;
+        }
+
+        #approveLoanModal .approve-confirm-btn:hover { background: #3d8b40; }
+
+        #approveLoanModal .approve-cancel-btn {
+            background: #e9ecef;
+            color: #343a40;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s ease;
+        }
+
+        #approveLoanModal .approve-cancel-btn:hover { background: #dbe0e4; }
     </style>
 </head>
 <body>
@@ -316,6 +398,27 @@
     <div id="loanDetailsModal" class="modal hidden">
         <div class="modal-content">
             </div>
+    </div>
+
+    <!-- Approve Loan modal — lets the admin review/override the amount before approving -->
+    <div id="approveLoanModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="approveModalCloseBtn">&times;</span>
+            <h3>Approve Loan</h3>
+            <p class="approve-note">
+                Applied for <strong id="approveOriginalAmount">-</strong>.
+                Adjust the amount below if the approved sum is different, or leave it as is.
+            </p>
+            <div class="approve-field">
+                <label for="approveAmountInput">Approved Amount (₦)</label>
+                <input type="number" id="approveAmountInput" min="1" step="0.01" required>
+                <span class="approve-field-hint">Term, duration and interest rate stay exactly as applied for.</span>
+            </div>
+            <div class="approve-actions">
+                <button type="button" id="approveConfirmBtn" class="approve-confirm-btn">Confirm Approval</button>
+                <button type="button" id="approveCancelBtn" class="approve-cancel-btn">Cancel</button>
+            </div>
+        </div>
     </div>
 
     <div id="successMessageModal" class="modal hidden">

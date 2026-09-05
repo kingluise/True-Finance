@@ -205,7 +205,11 @@
 
     <div id="customAlertContainer"></div>
 
-    <div class="sidebar">
+    <!-- Mobile menu toggle -->
+    <button id="menuToggle" class="menu-toggle" aria-label="Toggle menu">☰</button>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="sidebar" id="sidebar">
         <div class="logo-title">
             <img src="images/firstlend.png" alt="Logo" class="logo">
             <h2>FIRST LEND</h2>
@@ -253,6 +257,7 @@
 
                     <div id="paymentPlanContainer" class="payment-plan-section card hidden">
                         <h4>Loan Payment Plan</h4>
+                        <div class="table-container">
                         <table id="paymentPlanTable">
                             <thead>
                                 <tr>
@@ -266,6 +271,7 @@
                                 <tr><td colspan="4" style="text-align: center;">Enter Loan ID to load payment plan.</td></tr>
                             </tbody>
                         </table>
+                        </div>
                         <input type="hidden" id="selectedPaymentPlanItemId" name="selectedPaymentPlanItemId">
                     </div>
 
@@ -359,6 +365,36 @@
                     rollingLoader.style.display = 'none';
                 }
             }, 1000);
+        });
+
+        // Mobile sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                overlay.classList.add('visible');
+            }
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('visible');
+            }
+
+            menuToggle?.addEventListener('click', () => {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            overlay?.addEventListener('click', closeSidebar);
+
+            sidebar?.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeSidebar);
+            });
         });
     </script>
 </body>

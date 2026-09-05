@@ -17,13 +17,18 @@
 }
 
 .logo-title {
-    text-align: center;
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
 }
 
 .logo {
-    width: 80px;
-    margin-bottom: 10px;
+    width: 60px;
+    height: 60px;
+    margin-right: 15px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar h2 {
@@ -56,6 +61,14 @@
 
 .menu a:hover {
     background: #27ae60;
+}
+
+.menu a.active {
+    background-color: #FCA311;
+    color: #14213D;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
 }
 
 /* Mobile menu toggle button (hidden on desktop) */
@@ -115,128 +128,17 @@ body {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#paymentButtons {
+/* Top action-button row - matches .button-group on loan.html exactly */
+.button-group {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
     flex-wrap: wrap;
 }
 
-#logPaymentForm,
-#pendingApprovals { /* Keeping this original for context, though #pendingApprovals might be unused here */
-    margin-top: 20px;
-}
-
-#approvalsTable { /* Keeping this original for context, likely not used on this page */
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-#approvalsTable th,
-#approvalsTable td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-#approvalsTable th {
-    background: #14213D;
-    color: white;
-    font-weight: bold;
-}
-
-#approvalsTable tr:nth-child(even) {
-    background: #f9f9f9;
-}
-
-#approvalsTable tr:hover {
-    background: rgba(20, 33, 61, 0.1);
-}
-
-/* Payment buttons (Original from your provided CSS) */
-#paymentButtons button {
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 15px;
-    transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    background: #14213D;
-    color: white;
-}
-
-#paymentButtons button:hover {
-    background: #FCA311;
-    color: #14213D;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* log payment form styling (Original from your provided CSS) */
-#logPaymentForm {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px auto;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-}
-
-#logPaymentForm h3 {
-    text-align: center;
-    margin-bottom: 15px;
-    color: #343a40;
-    font-size: 1.2rem;
-}
-
-#paymentForm label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: #495057;
-    font-size: 0.9rem;
-}
-
-#paymentForm input,
-#paymentForm select {
-    width: calc(100% - 12px);
-    padding: 8px;
-    margin-bottom: 12px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-}
-
-#paymentForm input:focus,
-#paymentForm select:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-#paymentForm button[type="submit"] {
-    background: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-    width: 100%;
-}
-
-#paymentForm button[type="submit"]:hover {
-    background: #0056b3;
-}
-
-/* Hidden class (Original from your provided CSS) */
-.hidden{
+/* Hidden class */
+.hidden {
     display: none;
 }
 
@@ -270,29 +172,17 @@ body {
     }
 
     #paymentManagement {
-        width: 90%;
-    }
-
-    #approvalsTable {
-        font-size: 14px;
-    }
-
-    #paymentButtons {
-        flex-direction: column;
-    }
-}
-
-@media (max-width: 480px) {
-    #logPaymentForm {
         padding: 15px;
-        max-width: 90%;
+    }
+
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
     }
 }
 
 
-/* ====== NEW STYLES ADDED BELOW (Only additions for new HTML elements) ====== */
-
-/* Custom Alert Styling (for showCustomAlert function) */
+/* ====== Custom Alert Styling ====== */
 #customAlertContainer {
     position: fixed;
     top: 0;
@@ -335,32 +225,7 @@ body {
     background-color: #f44336; /* Red */
 }
 
-/* Additional Sidebar adjustments for consistency with new theme */
-.sidebar .logo-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30px;
-}
-
-.sidebar .logo {
-    width: 60px; /* Slightly smaller logo */
-    height: 60px; /* Maintain aspect ratio */
-    margin-right: 15px;
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.sidebar .menu a.active {
-    background-color: #FCA311; /* Use the orange from your existing buttons */
-    color: #14213D; /* Dark text on orange */
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    border-radius: 8px; /* Consistent with other new elements */
-}
-
-
-/* New general classes added to HTML elements */
+/* ====== Form and Table Section General Styles - matches loan.css exactly ====== */
 .form-section, .table-section {
     background-color: #ffffff;
     padding: 25px;
@@ -378,55 +243,62 @@ body {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-/* Adjustments for #paymentForm specific elements */
-#paymentForm .form-group {
+#logPaymentForm h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #14213D;
+    font-size: 1.7em;
+}
+
+/* Form field styling - matches loan.css's .form-group pattern */
+.form-group {
     margin-bottom: 15px;
     display: flex;
     flex-direction: column;
 }
 
-#paymentForm label {
-    font-weight: bold;
+.form-group label {
+    display: block;
     margin-bottom: 8px;
-    color: #343a40; /* Harmonizing with your existing text colors */
-    font-size: 1em; /* Standard font size */
+    font-weight: bold;
+    color: #343a40;
+    font-size: 1em;
 }
 
-/* Override original input/select width for better padding consistency */
-#paymentForm input[type="text"],
-#paymentForm input[type="number"],
-#paymentForm input[type="date"],
-#paymentForm select {
-    width: calc(100% - 20px); /* Adjusted for 10px padding on each side */
-    padding: 10px; /* Increased padding for better input feel */
-    box-sizing: border-box; /* Crucial for width calculation */
-    background-color: #f9f9f9; /* Light background for inputs */
-    border: 1px solid #ced4da; /* Consistent border */
-    border-radius: 5px; /* Consistent border-radius */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-#paymentForm input:focus,
-#paymentForm select:focus {
-    border-color: #FCA311; /* Orange focus color to match theme */
-    box-shadow: 0 0 0 0.2rem rgba(252, 163, 17, 0.25); /* Subtle glow */
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #FCA311;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(252, 163, 17, 0.25);
 }
 
-#paymentForm input[readonly] {
+.form-group input[readonly] {
     background-color: #e9ecef;
     color: #6c757d;
     cursor: not-allowed;
 }
 
-
-/* New classes for buttons (action-button is primary for #paymentButtons) */
+/* Action buttons - single source of truth is .action-button, matching loan.css exactly */
 .action-button {
-    /* Styles are mostly already defined in #paymentButtons button,
-       but this class is added to other buttons like goBackBtn */
     background: #14213D;
     color: white;
     padding: 12px 25px;
     border: none;
-    border-radius: 8px; /* More rounded to fit new aesthetic */
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1.1em;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -440,7 +312,7 @@ body {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.submit-button { /* New class for submit button */
+.submit-button {
     background-color: #28a745; /* Green */
     color: white;
     padding: 10px 20px;
@@ -458,7 +330,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.cancel-button { /* New class for cancel button */
+.cancel-button {
     background-color: #dc3545; /* Red */
     color: white;
     padding: 10px 20px;
@@ -476,7 +348,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.go-back-button { /* New class for the Go Back button */
+.go-back-button {
     margin-top: 20px;
     background-color: #6c757d; /* Grey */
 }
@@ -485,23 +357,22 @@ body {
     background-color: #5a6268;
 }
 
-.form-actions { /* Flex container for form buttons */
+.form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     margin-top: 25px;
 }
 
-/* Table styling additions (for confirmationTable and paymentPlanTable) */
+/* Table styling additions (for confirmationTable, paymentPlanTable, paymentTrackerTable) */
 table {
-    /* Most basic table styles are already in your original CSS */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Lighter shadow for inner tables */
-    border-radius: 8px; /* Softer rounded corners */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-radius: 8px;
     min-width: 600px; /* keeps columns readable; scrolls under .table-container on mobile */
 }
 
 th, td {
-    padding: 12px 15px; /* Slightly more padding */
+    padding: 12px 15px;
 }
 
 /* Action buttons within table rows (for Accept/Decline) */
@@ -538,12 +409,12 @@ td button.declinePayment:hover {
     display: flex;
     justify-content: center;
     margin-top: 30px;
-    flex-wrap: wrap; /* Allow wrapping for small screens */
+    flex-wrap: wrap;
 }
 
 .pagination-button {
     padding: 10px 15px;
-    margin: 5px; /* Adjust margin for wrap */
+    margin: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f8f9fa;
@@ -557,7 +428,7 @@ td button.declinePayment:hover {
 }
 
 .pagination-button.active {
-    background-color: #FCA311; /* Orange for active page (from your existing buttons) */
+    background-color: #FCA311;
     color: #14213D;
     border-color: #FCA311;
 }
@@ -568,37 +439,37 @@ td button.declinePayment:hover {
     background-color: #e9ecef;
 }
 
-/* Payment Plan Specific Styling (New elements) */
+/* Payment Plan Specific Styling */
 .payment-plan-section {
     margin-top: 25px;
     margin-bottom: 25px;
-    border-top: 2px solid #bdc3c7; /* Separator for visual distinction */
+    border-top: 2px solid #bdc3c7;
     padding-top: 20px;
 }
 
 .payment-plan-section h4 {
     text-align: center;
-    color: #14213D; /* Consistent with your h3/h2 */
+    color: #14213D;
     font-size: 1.4em;
     margin-bottom: 15px;
 }
 
 #paymentPlanTable th:last-child,
 #paymentPlanTable td:last-child {
-    text-align: center; /* Center the radio buttons */
+    text-align: center;
 }
 
 .payment-item-radio {
-    margin: 0; /* Remove default radio button margin */
+    margin: 0;
 }
 
 .payment-item-radio + label {
-    margin-left: 5px; /* Space between radio and label */
+    margin-left: 5px;
     cursor: pointer;
 }
 
 .paid-installment {
-    background-color: #e6ffe6; /* Light green for paid rows */
+    background-color: #e6ffe6;
     opacity: 0.7;
     font-style: italic;
     color: #666;
@@ -608,9 +479,10 @@ td button.declinePayment:hover {
     cursor: not-allowed;
 }
 
-/* Mobile tweaks for buttons and action-heavy areas */
+/* Mobile tweaks for buttons, forms and tables - matches loan.css exactly */
 @media (max-width: 768px) {
     .action-button {
+        width: 100%;
         padding: 10px 16px;
         font-size: 0.95em;
     }
@@ -629,5 +501,9 @@ td button.declinePayment:hover {
     td button {
         padding: 6px 10px;
         font-size: 0.85em;
+    }
+
+    table {
+        font-size: 14px;
     }
 }
