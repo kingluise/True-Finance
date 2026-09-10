@@ -1,0 +1,410 @@
+/* css/loan-repayments.css */
+
+/* ====== Rolling Page Load Animation ====== */
+@keyframes rollOut {
+    to {
+        transform: translateY(-100vh) rotate(-15deg);
+        opacity: 0;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.rolling-load {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #14213D;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    animation: rollOut 0.6s ease-out forwards;
+    animation-delay: 0.8s;
+}
+
+.rolling-load-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: #FCA311;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+.rolling-load p {
+    color: #fff;
+}
+
+/* ====== Sidebar (matches the rest of the app) ====== */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.logo-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: #FCA311;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    margin: 15px 0;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.menu a:hover {
+    background: #FCA311;
+    color: #14213D;
+}
+
+.menu a.active {
+    background-color: #FCA311;
+    color: #14213D;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile menu toggle button (hidden on desktop) */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1002;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    line-height: 1;
+    background: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Overlay behind sidebar when open on mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.sidebar-overlay.visible {
+    display: block;
+}
+
+/* ====== Page layout ====== */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f9;
+}
+
+.container {
+    margin-left: 270px;
+    padding: 20px;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.container h2 {
+    color: #14213D;
+}
+
+/* ====== Custom Alert (matches other pages) ====== */
+#customAlertContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.custom-alert {
+    padding: 12px 25px;
+    margin-top: 20px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    opacity: 0.95;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: auto;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+.custom-alert-error {
+    background-color: #f44336;
+}
+
+.custom-alert .close-btn {
+    margin-left: 12px;
+    cursor: pointer;
+}
+
+/* ====== Summary Cards ====== */
+.summary-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 20px 0 25px;
+}
+
+.summary-card {
+    flex: 1;
+    min-width: 220px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    border-left: 4px solid #FCA311;
+    transform: translateY(10px);
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.summary-card.principal-card {
+    border-left-color: #4CAF50;
+}
+
+.summary-card.interest-card {
+    border-left-color: #14213D;
+}
+
+.summary-card .card-label {
+    display: block;
+    font-size: 0.85em;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 8px;
+}
+
+.summary-card .card-value {
+    display: block;
+    font-size: 1.6em;
+    font-weight: 700;
+    color: #14213D;
+}
+
+.summary-card .card-period {
+    display: block;
+    font-size: 0.8em;
+    color: #9aa1ab;
+    margin-top: 4px;
+}
+
+/* ====== Filter bar ====== */
+.filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.filter-bar label {
+    font-weight: 600;
+    color: #343a40;
+    font-size: 0.95em;
+}
+
+.filter-bar select {
+    padding: 9px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95em;
+    background: #fff;
+    min-width: 160px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-bar select:focus {
+    border-color: #FCA311;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(252, 163, 17, 0.2);
+}
+
+/* ====== Table (matches notification/customer page styling) ====== */
+.table-container {
+    margin: 10px 0 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    background: white;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    min-width: 1300px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+th {
+    background: linear-gradient(135deg, #14213D, #1a2a4f);
+    color: white;
+    font-weight: 600;
+    padding: 16px 18px;
+    text-align: left;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+th:first-child {
+    border-top-left-radius: 12px;
+}
+
+th:last-child {
+    border-top-right-radius: 12px;
+}
+
+tbody tr {
+    transition: background 0.2s ease;
+}
+
+tbody tr:nth-child(even) {
+    background-color: rgba(249, 249, 249, 0.8);
+}
+
+tbody tr:hover {
+    background-color: rgba(252, 163, 17, 0.08);
+}
+
+td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+}
+
+/* ====== Status badges ====== */
+.status-badge {
+    display: inline-block;
+    padding: 5px 11px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-approved {
+    background-color: rgba(76, 175, 80, 0.12);
+    color: #4CAF50;
+}
+
+.status-defaulted {
+    background-color: rgba(244, 67, 54, 0.12);
+    color: #F44336;
+}
+
+.balance-positive {
+    color: #B3261E;
+    font-weight: 600;
+}
+
+.balance-zero {
+    color: #4CAF50;
+    font-weight: 600;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 768px) {
+    .sidebar {
+        left: -270px;
+        transition: left 0.3s ease;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .container {
+        margin-left: 0;
+        padding: 10px;
+        padding-top: 70px;
+    }
+
+    .summary-cards {
+        flex-direction: column;
+    }
+
+    .summary-card {
+        min-width: 0;
+    }
+}

@@ -44,8 +44,6 @@
             font-family: 'Newsreader', Georgia, serif;
         }
 
-        /* ============ HERO / LANDING ============ */
-
         .hero {
             position: relative;
             min-height: 100vh;
@@ -135,8 +133,6 @@
             color: #8B94AB;
             font-size: 0.85em;
         }
-
-        /* ============ FORM PAGE ============ */
 
         .form-page {
             min-height: 100vh;
@@ -338,8 +334,6 @@
 
         #formMessage .msg-icon { flex: 0 0 auto; line-height: 1; margin-top: 1px; }
 
-        /* ============ SUCCESS PANEL ============ */
-
         .success-panel {
             text-align: center;
             padding: 20px 6px 6px;
@@ -401,7 +395,6 @@
 </head>
 <body>
 
-    <!-- ============ HERO / LANDING ============ -->
     <section class="hero" id="heroSection">
         <svg class="hero-art" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <g stroke="#FCA311" stroke-width="1" opacity="0.18">
@@ -432,7 +425,6 @@
         </div>
     </section>
 
-    <!-- ============ APPLICATION FORM ============ -->
     <section class="form-page" id="formSection">
         <div class="apply-container">
 
@@ -589,8 +581,8 @@
                         </div>
                         <div class="form-group">
                             <label for="duration">Duration <span class="req-mark">*</span></label>
-                            <input type="number" id="duration" min="1" max="23" placeholder="1&ndash;23" required>
-                            <span class="field-hint" id="durationHint">Number of weeks or months, based on the term selected.</span>
+                            <input type="number" id="duration" min="1" max="20" placeholder="e.g. 8" required>
+                            <span class="field-hint" id="durationHint">Select a loan term to see the allowed duration range.</span>
                         </div>
                     </div>
 
@@ -618,7 +610,6 @@
     </section>
 
     <script>
-        // ============ Hero reveal (UI only — no submission logic here) ============
         const heroSection = document.getElementById('heroSection');
         const formSection = document.getElementById('formSection');
         const applyNowBtn = document.getElementById('applyNowBtn');
@@ -633,15 +624,33 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // Purely descriptive helper text — does not affect validation or payload
+        // Term-based duration limits: Weekly 1-20 weeks, Monthly 1-5 months.
+        // Updates both the actual min/max (so the browser enforces it) and the hint text.
         const loanTermSelect = document.getElementById('loanTerm');
+        const durationInput = document.getElementById('duration');
         const durationHint = document.getElementById('durationHint');
+
         loanTermSelect.addEventListener('change', () => {
-            const unit = loanTermSelect.value === 'Weekly' ? 'weeks' : loanTermSelect.value === 'Monthly' ? 'months' : 'weeks or months';
-            durationHint.textContent = `Number of ${unit} (1\u201323), based on the term selected.`;
+            durationInput.value = '';
+
+            if (loanTermSelect.value === 'Weekly') {
+                durationInput.min = 1;
+                durationInput.max = 20;
+                durationInput.placeholder = 'e.g. 8';
+                durationHint.textContent = 'Number of weeks (1\u201320), based on the term selected.';
+            } else if (loanTermSelect.value === 'Monthly') {
+                durationInput.min = 1;
+                durationInput.max = 5;
+                durationInput.placeholder = 'e.g. 3';
+                durationHint.textContent = 'Number of months (1\u20135), based on the term selected.';
+            } else {
+                durationInput.min = 1;
+                durationInput.max = 20;
+                durationInput.placeholder = 'e.g. 8';
+                durationHint.textContent = 'Select a loan term to see the allowed duration range.';
+            }
         });
 
-        // ============ Original submission logic, unchanged ============
         const successPanel = document.getElementById('successPanel');
         const applicationForm = document.getElementById('applicationForm');
 
@@ -652,7 +661,10 @@
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = false;
             submitBtn.textContent = 'Submit application';
-            durationHint.textContent = 'Number of weeks or months, based on the term selected.';
+            durationInput.min = 1;
+            durationInput.max = 20;
+            durationInput.placeholder = 'e.g. 8';
+            durationHint.textContent = 'Select a loan term to see the allowed duration range.';
         });
 
         applicationForm.addEventListener('submit', async (e) => {
@@ -705,7 +717,6 @@
                     throw new Error(data.message || 'Something went wrong. Please try again.');
                 }
 
-                // Presentation only: swap the form for the success panel
                 document.getElementById('successText').textContent =
                     data.message || 'Thank you. Our team will review your details and reach out shortly.';
                 applicationForm.style.display = 'none';

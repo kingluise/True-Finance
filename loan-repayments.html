@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Repayments</title>
+    <link rel="icon" type="image/x-icon" href="/images/firstlend.png">
+    <link rel="stylesheet" href="css/loan-repayments.css">
+    <script src="js/config.js" defer></script>
+    <script src="js/loan-repayments.js" defer></script>
+</head>
+<body>
+    <div class="rolling-load">
+        <div class="rolling-load-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <div id="customAlertContainer"></div>
+
+    <!-- Mobile menu toggle -->
+    <button id="menuToggle" class="menu-toggle" aria-label="Toggle menu">☰</button>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="logo-title">
+            <img src="images/firstlend.png" alt="Logo" class="logo">
+            <h2>FIRST LEND</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="dashboard.html">🏠 Home</a></li>
+            <li><a href="customer.html">👥 Manage Customers</a></li>
+            <li><a href="loan.html">💰 Manage Loans</a></li>
+            <li class="active"><a href="loan-repayments.html">📄 Loan Repayments</a></li>
+            <li><a href="payment.html">💳 Payments</a></li>
+            <li><a href="notification.html">🔔 Notifications</a></li>
+            <li><a href="users.html">👤 Control Panel</a></li>
+            <li><a href="analysis.html">📊 Profit Analytics</a></li>
+            <li><a href="index.html" id="logout">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h2>📄 Loan Repayments</h2>
+
+        <div class="summary-cards">
+            <div class="summary-card total-card">
+                <span class="card-label">Total Repayment Due</span>
+                <span class="card-value" id="totalDueValue">₦0</span>
+                <span class="card-period" id="totalDuePeriod">-</span>
+            </div>
+            <div class="summary-card principal-card">
+                <span class="card-label">Principal (This Month)</span>
+                <span class="card-value" id="principalDueValue">₦0</span>
+                <span class="card-period">Portion of total due</span>
+            </div>
+            <div class="summary-card interest-card">
+                <span class="card-label">Interest (This Month)</span>
+                <span class="card-value" id="interestDueValue">₦0</span>
+                <span class="card-period">Portion of total due</span>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <label for="termTypeFilter">Filter by Loan Type:</label>
+            <select id="termTypeFilter">
+                <option value="all">All</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table id="repaymentsTable">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Loan Amount</th>
+                        <th>Loan Type</th>
+                        <th>Interest Rate</th>
+                        <th>Expected Interest</th>
+                        <th>Total</th>
+                        <th>Duration</th>
+                        <th>Installment Amount</th>
+                        <th>Amount Paid</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                    </tr>
+                </thead>
+                <tbody id="repaymentsTableBody">
+                    <tr><td colspan="13" style="text-align:center;">Loading loan repayments...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const rollingLoader = document.querySelector('.rolling-load');
+                if (rollingLoader) rollingLoader.style.display = 'none';
+            }, 1000);
+        });
+
+        // Mobile sidebar toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                overlay.classList.add('visible');
+            }
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('visible');
+            }
+
+            menuToggle?.addEventListener('click', () => {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            overlay?.addEventListener('click', closeSidebar);
+
+            sidebar?.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeSidebar);
+            });
+        });
+    </script>
+</body>
+</html>
