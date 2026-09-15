@@ -23,8 +23,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const approveCancelBtn = document.getElementById('approveCancelBtn');
     const approveConfirmBtn = document.getElementById('approveConfirmBtn');
     const approveAmountInput = document.getElementById('approveAmountInput');
-    const approveOriginalAmount = document.getElementById('approveOriginalAmount');
+    const approveInterestRateInput = document.getElementById('approveInterestRateInput');
+    const approveDurationInput = document.getElementById('approveDurationInput');
+    const approveDurationHint = document.getElementById('approveDurationHint');
+    const approveNote = document.getElementById('approveNote');
     let currentApproveLoanId = null;
+
+    // Same duration limits used on the Add Loan form, applied per the loan's own term type
+    const getDurationLimits = (termType) => {
+        const type = (termType || '').toLowerCase();
+        if (type === 'weekly') return { min: 1, max: 23, label: 'weeks' };
+        if (type === 'monthly') return { min: 1, max: 6, label: 'months' };
+        return { min: 1, max: 60, label: 'installments' };
+    };
 
     const customerIdInput = document.getElementById('customerId');
     const fullNameInput = document.getElementById('fullName');
@@ -214,8 +225,27 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Backend's LoanStatus enum names (must match exactly - the API parses this case-sensitively)
+        const statusMap = {
+            pending: 'Pending',
+            approved: 'Approved',
+            rejected: 'Rejected',
+            declined: 'Rejected', // the filter dropdown option is labelled "Declined" but the real status is "Rejected"
+            completed: 'Completed',
+            defaulted: 'Defaulted'
+        };
+
+        const params = new URLSearchParams();
+        // Fetch effectively "all" loans in one page rather than the default 10, so pending/approved/etc.
+        // loans that aren't in the first 10 by ID still show up.
+        params.set('pageSize', '1000');
+        params.set('pageNumber', '1');
+        if (status && status !== 'all') {
+            params.set('status', statusMap[status.toLowerCase()] || status);
+        }
+
         try {
-            const response = await fetch(`${API_BASE_URL}/Loan/list`, {
+            const response = await fetch(`${API_BASE_URL}/Loan/list?${params.toString()}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -224,8 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (response.ok) {
                 const loans = result.loans || [];
-                const filteredLoans = status === 'all' ? loans : loans.filter(loan => loan.status.toLowerCase() === status.toLowerCase());
-                renderTable(filteredLoans, tableBody, tableType);
+                renderTable(loans, tableBody, tableType);
             } else {
                 tableBody.innerHTML = `<tr><td colspan="6">Error fetching loans: ${result.message || response.statusText}</td></tr>`;
             }
@@ -259,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>
                     <button class="action-button view-details-btn" data-loan-id="${loanId}">View</button>
                     ${tableType === 'approve' ? `
-                        <button class="action-button approve-btn" data-loan-id="${loanId}" data-principal="${principal}">Approve</button>
+                        <button class="action-button approve-btn" data-loan-id="${loanId}">Approve</button>
                         <button class="action-button decline-btn" data-loan-id="${loanId}">Decline</button>
                     ` : ''}
                     ${tableType === 'manage' && (status.toLowerCase() === 'approved' || status.toLowerCase() === 'defaulted') ? `
@@ -274,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         tableBody.querySelectorAll('.view-details-btn').forEach(btn => btn.addEventListener('click', (e) => showLoanDetails(e.target.dataset.loanId)));
-        tableBody.querySelectorAll('.approve-btn').forEach(btn => btn.addEventListener('click', (e) => openApproveModal(e.target.dataset.loanId, e.target.dataset.principal)));
+        tableBody.querySelectorAll('.approve-btn').forEach(btn => btn.addEventListener('click', (e) => openApproveModal(e.target.dataset.loanId)));
         tableBody.querySelectorAll('.decline-btn').forEach(btn => btn.addEventListener('click', (e) => updateLoanStatus(e.target.dataset.loanId, 'reject')));
         tableBody.querySelectorAll('.complete-btn').forEach(btn => btn.addEventListener('click', (e) => updateLoanStatus(e.target.dataset.loanId, 'complete')));
         tableBody.querySelectorAll('.default-btn').forEach(btn => btn.addEventListener('click', (e) => updateLoanStatus(e.target.dataset.loanId, 'default')));
@@ -315,30 +344,75 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ---
-    // APPROVE LOAN (with editable amount)
+    // APPROVE LOAN (with editable amount, interest rate, and duration)
     // ---
-    const openApproveModal = (loanId, principalFromRow) => {
+    const openApproveModal = async (loanId) => {
         currentApproveLoanId = loanId;
 
-        const knownPrincipal = parseFloat(principalFromRow);
-        if (!isNaN(knownPrincipal)) {
-            approveOriginalAmount.textContent = formatCurrency(knownPrincipal, 'NGN');
-            approveAmountInput.value = knownPrincipal;
-        } else {
-            approveOriginalAmount.textContent = '-';
-            approveAmountInput.value = '';
-        }
+        // Reset to a loading state while we fetch the real current values
+        approveNote.textContent = 'Loading current loan details…';
+        approveAmountInput.value = '';
+        approveInterestRateInput.value = '';
+        approveDurationInput.value = '';
+        approveConfirmBtn.disabled = true;
 
         showModal(approveLoanModal);
-        approveAmountInput.focus();
+
+        const token = getAuthToken();
+        if (!token) {
+            alert('Authentication token is missing. Please log in again.');
+            hideModal(approveLoanModal);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/Loan/details/${loanId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const loan = await response.json();
+
+            if (!response.ok) {
+                throw new Error(loan.message || 'Could not load loan details.');
+            }
+
+            const termType = loan.termType || loan.TermType || '';
+            const limits = getDurationLimits(termType);
+
+            approveNote.innerHTML = `Applied for <strong>${formatCurrency(loan.principal, 'NGN')}</strong> at <strong>${loan.interestRate}%</strong> over <strong>${loan.durationValue} ${limits.label}</strong> (${termType}). Adjust any field below if needed.`;
+
+            approveAmountInput.value = loan.principal;
+            approveInterestRateInput.value = loan.interestRate;
+
+            approveDurationInput.value = loan.durationValue;
+            approveDurationInput.min = limits.min;
+            approveDurationInput.max = limits.max;
+            approveDurationHint.textContent = `Number of ${limits.label} (${limits.min}\u2013${limits.max}). Term type (${termType}) stays fixed.`;
+
+            approveConfirmBtn.disabled = false;
+            approveAmountInput.focus();
+        } catch (error) {
+            console.error('Error loading loan details for approval:', error);
+            approveNote.textContent = 'Could not load this loan\'s current details. Please close and try again.';
+        }
     };
 
     const confirmApproveLoan = async () => {
         if (!currentApproveLoanId) return;
 
         const amount = parseFloat(approveAmountInput.value);
+        const rate = parseFloat(approveInterestRateInput.value);
+        const duration = parseInt(approveDurationInput.value, 10);
+
         if (isNaN(amount) || amount <= 0) {
             alert('Please enter a valid approved amount greater than zero.');
+            return;
+        }
+        if (isNaN(rate) || rate < 0) {
+            alert('Please enter a valid interest rate.');
+            return;
+        }
+        if (isNaN(duration) || duration <= 0) {
+            alert('Please enter a valid duration.');
             return;
         }
 
@@ -358,7 +432,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ newPrincipal: amount })
+                body: JSON.stringify({
+                    newPrincipal: amount,
+                    newInterestRate: rate,
+                    newDurationValue: duration
+                })
             });
 
             const result = await response.json();
