@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,17 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loan Notifications</title>
     <link rel="icon" type="image/x-icon" href="/images/firstlend.png">
-    <link rel="stylesheet" href="css/notification.css"> <!-- Ensure this CSS exists -->
+    <link rel="stylesheet" href="css/notification.css">
+
     <script src="js/config.js" defer></script>
-     <!-- jsPDF & AutoTable -->
+    <!-- jsPDF & AutoTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <script src="js/notification.js" defer></script>
 
-
-
     <style>
-        /* Rolling Page Load Animation */
         @keyframes rollIn {
             0% {
                 opacity: 0;
@@ -65,7 +64,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Modern Table Styling */
         .table-container {
             margin: 20px 0;
             border-radius: 12px;
@@ -198,6 +196,13 @@
             color: #14213D;
         }
 
+        /* Keep summary cards visible on page load */
+        #repaymentsSummary,
+        #principalInterestSummary,
+        #thisWeekSummary {
+            display: flex;
+        }
+
         .term-filter-group {
             max-width: 260px;
         }
@@ -255,6 +260,7 @@
             <img src="images/firstlend.png" alt="Logo" class="logo">
             <h2>FIRST LEND</h2>
         </div>
+
         <ul class="menu">
             <li><a href="dashboard.html">🏠 Home</a></li>
             <li><a href="customer.html">👥 Manage Customers</a></li>
@@ -275,18 +281,25 @@
             <!-- Query Due Repayments Form -->
             <div id="queryDuePaymentsSection" class="form-section card">
                 <h3>Query Repayments Due by Date Range</h3>
+
                 <form id="queryDuePaymentsForm">
                     <div class="form-group">
                         <label for="fromDate">From Date:</label>
                         <input type="date" id="fromDate" name="fromDate" required>
                     </div>
+
                     <div class="form-group">
                         <label for="toDate">To Date:</label>
                         <input type="date" id="toDate" name="toDate" required>
                     </div>
+
                     <div class="form-actions">
-                        <button type="submit" id="queryPaymentsButton" class="submit-button">Query Payments</button>
-                        <button type="button" id="clearQueryButton" class="cancel-button">Clear</button>
+                        <button type="submit" id="queryPaymentsButton" class="submit-button">
+                            Query Payments
+                        </button>
+                        <button type="button" id="clearQueryButton" class="cancel-button">
+                            Clear
+                        </button>
                     </div>
                 </form>
             </div>
@@ -304,37 +317,44 @@
                     </select>
                 </div>
 
-                <div id="repaymentsSummary" class="repayments-summary hidden">
+                <!-- Weekly, Monthly and Grand Totals -->
+                <div id="repaymentsSummary" class="repayments-summary">
                     <div class="summary-item">
                         <span class="summary-label">Weekly Total</span>
                         <span id="weeklyTotal" class="summary-value">₦0</span>
                     </div>
+
                     <div class="summary-item">
                         <span class="summary-label">Monthly Total</span>
                         <span id="monthlyTotal" class="summary-value">₦0</span>
                     </div>
+
                     <div class="summary-item summary-grand-total">
                         <span class="summary-label">Grand Total</span>
                         <span id="grandTotal" class="summary-value">₦0</span>
                     </div>
                 </div>
 
-                <div id="principalInterestSummary" class="repayments-summary hidden">
+                <!-- Principal and Interest Totals -->
+                <div id="principalInterestSummary" class="repayments-summary">
                     <div class="summary-item">
                         <span class="summary-label">Principal (This Query)</span>
                         <span id="principalTotal" class="summary-value">₦0</span>
                     </div>
+
                     <div class="summary-item">
                         <span class="summary-label">Interest (This Query)</span>
                         <span id="interestTotal" class="summary-value">₦0</span>
                     </div>
                 </div>
 
-                <div id="thisWeekSummary" class="repayments-summary hidden">
+                <!-- This Week Totals -->
+                <div id="thisWeekSummary" class="repayments-summary">
                     <div class="summary-item">
                         <span class="summary-label">This Week - Actual (Due)</span>
                         <span id="thisWeekActualTotal" class="summary-value">₦0</span>
                     </div>
+
                     <div class="summary-item">
                         <span class="summary-label">This Week - Paid</span>
                         <span id="thisWeekPaidTotal" class="summary-value">₦0</span>
@@ -353,38 +373,44 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
+
                         <tbody id="loanNotificationsTableBody">
-                            <!-- Loan notifications/due repayments will be inserted here by JavaScript -->
-                            <tr><td colspan="6" style="text-align: center;">Select a date range and click Query Payments.</td></tr>
+                            <tr>
+                                <td colspan="6" style="text-align: center;">
+                                    Select a date range and click Query Payments.
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Export to PDF Button -->
                 <div class="form-actions" style="margin-top: 15px; text-align: right;">
-                    <button type="button" id="exportPdfButton" class="submit-button">📄 Export to PDF</button>
+                    <button type="button" id="exportPdfButton" class="submit-button">
+                        📄 Export to PDF
+                    </button>
                 </div>
 
                 <!-- Pagination -->
                 <div id="notificationsPagination" class="pagination-controls"></div>
             </div>
-
         </div>
     </div>
 
     <script>
-        // Add this script to hide the rolling loader when page is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
+        // Hide the rolling loader when the page is loaded.
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
                 const rollingLoader = document.querySelector('.rolling-load');
+
                 if (rollingLoader) {
                     rollingLoader.style.display = 'none';
                 }
             }, 1000);
         });
 
-        // Mobile sidebar toggle
-        document.addEventListener('DOMContentLoaded', function() {
+        // Mobile sidebar toggle.
+        document.addEventListener('DOMContentLoaded', function () {
             const menuToggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
@@ -393,12 +419,13 @@
                 sidebar.classList.add('open');
                 overlay.classList.add('visible');
             }
+
             function closeSidebar() {
                 sidebar.classList.remove('open');
                 overlay.classList.remove('visible');
             }
 
-            menuToggle?.addEventListener('click', () => {
+            menuToggle?.addEventListener('click', function () {
                 if (sidebar.classList.contains('open')) {
                     closeSidebar();
                 } else {
@@ -408,10 +435,11 @@
 
             overlay?.addEventListener('click', closeSidebar);
 
-            sidebar?.querySelectorAll('a').forEach(link => {
+            sidebar?.querySelectorAll('a').forEach(function (link) {
                 link.addEventListener('click', closeSidebar);
             });
         });
     </script>
 </body>
 </html>
+```
