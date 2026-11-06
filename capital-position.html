@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capital Position | First Lend</title>
+
+    <link rel="stylesheet" href="css/capital-position.css">
+
+    <script src="js/config.js" defer></script>
+    <script src="js/capital-position.js" defer></script>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo-title">
+            <img src="images/firstlend.png" alt="Logo" class="logo">
+            <h2>TRUE FINANCE LIMITED</h2>
+        </div>
+
+        <ul class="menu">
+            <li><a href="dashboard.html">🏠 Home</a></li>
+            <li><a href="customer.html">👥 Manage Customers</a></li>
+            <li><a href="loan.html">💰 Manage Loans</a></li>
+            <li><a href="loan-repayments.html">💳 Loan Repayments</a></li>
+            <li><a href="payment.html">💵 Payments</a></li>
+            <li><a href="expense.html">📊 Expense</a></li>
+            <li><a href="notification.html">🔔 Notifications</a></li>
+            <li><a href="users.html">⚙️ Control Panel</a></li>
+            <li><a href="analysis.html">📊 Profit Analytics</a></li>
+            <li class="active">
+                <a href="capital-position.html">🏦 Capital Position</a>
+            </li>
+            <li><a href="index.html" id="logout">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <main class="main-content">
+
+        <header class="page-header">
+            <div>
+                <h1>Capital Position</h1>
+                <p>See how much capital is currently running in loans and how much remains available.</p>
+            </div>
+        </header>
+
+        <!-- MAIN CAPITAL POSITION -->
+        <section class="capital-summary">
+
+            <div class="summary-card">
+                <h3>Outstanding Principal</h3>
+                <p id="outstandingPrincipal">₦0.00</p>
+                <small>Currently running in loans</small>
+            </div>
+
+            <div class="summary-card">
+                <h3>Available Cash</h3>
+                <p id="availableCash">₦0.00</p>
+                <small>Cash not yet disbursed</small>
+            </div>
+
+            <div class="summary-card">
+                <h3>Current Capital Position</h3>
+                <p id="currentCapitalPosition">₦0.00</p>
+                <small>Outstanding Principal + Available Cash</small>
+            </div>
+
+        </section>
+
+        <!-- CAPITAL BREAKDOWN -->
+        <section class="capital-details">
+
+            <h2>Capital Breakdown</h2>
+
+            <div class="details-grid">
+
+                <div class="detail-item">
+                    <span>Total Capital Introduced</span>
+                    <strong id="totalCapitalIntroduced">₦0.00</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Loan Disbursements</span>
+                    <strong id="totalDisbursements">₦0.00</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Principal Recovered</span>
+                    <strong id="principalRecovered">₦0.00</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Interest Received</span>
+                    <strong id="interestReceived">₦0.00</strong>
+                </div>
+
+                <div class="detail-item">
+                    <span>Total Expenses</span>
+                    <strong id="totalExpenses">₦0.00</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- EXPENSE DETAILS -->
+        <section class="capital-details">
+
+            <h2>Expense Details</h2>
+
+            <div id="expenseDetails">
+                <p>No expenses recorded.</p>
+            </div>
+
+        </section>
+
+        <!-- CAPITAL MANAGEMENT -->
+        <section class="capital-management">
+
+            <div class="management-card">
+
+                <h2>Set Opening Capital</h2>
+
+                <p>
+                    Record the initial capital already invested in the business.
+                </p>
+
+                <form id="openingCapitalForm">
+
+                    <div class="form-group">
+                        <label for="openingAmount">Amount (₦)</label>
+                        <input
+                            type="number"
+                            id="openingAmount"
+                            min="0.01"
+                            step="0.01"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="openingDescription">Description</label>
+                        <input
+                            type="text"
+                            id="openingDescription"
+                            placeholder="e.g. Initial business capital"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="openingEffectiveDate">Effective Date</label>
+                        <input
+                            type="date"
+                            id="openingEffectiveDate"
+                            required>
+                    </div>
+
+                    <button type="submit" id="saveOpeningCapital">
+                        Save Opening Capital
+                    </button>
+
+                </form>
+
+            </div>
+
+            <div class="management-card">
+
+                <h2>Add New Capital</h2>
+
+                <p>
+                    Record fresh money introduced into the business after the initial capital.
+                </p>
+
+                <form id="contributionForm">
+
+                    <div class="form-group">
+                        <label for="contributionAmount">Amount (₦)</label>
+                        <input
+                            type="number"
+                            id="contributionAmount"
+                            min="0.01"
+                            step="0.01"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contributionDescription">Description</label>
+                        <input
+                            type="text"
+                            id="contributionDescription"
+                            placeholder="e.g. Additional business capital"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contributionDate">Contribution Date</label>
+                        <input
+                            type="date"
+                            id="contributionDate"
+                            required>
+                    </div>
+
+                    <button type="submit" id="saveContribution">
+                        Add Capital
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+        <div id="customAlertContainer"></div>
+
+        <div id="loadingIndicator" class="loading-indicator">
+            Loading capital position...
+        </div>
+
+    </main>
+
+</body>
+</html>
