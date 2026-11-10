@@ -8,6 +8,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingIndicator = document.getElementById('loadingIndicator');
     const logoutBtn = document.getElementById('logout');
 
+    // MOBILE SIDEBAR CONTROLS
+    const sidebar = document.querySelector('.sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    const closeSidebar = () => {
+        if (sidebar) sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('visible');
+    };
+
+    if (menuToggle && sidebar && sidebarOverlay) {
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('visible');
+        });
+
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        sidebar.querySelectorAll('.menu a').forEach(link => {
+            link.addEventListener('click', closeSidebar);
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                closeSidebar();
+            }
+        });
+    }
+
     // Local date helper
     const getToday = () => {
         const today = new Date();

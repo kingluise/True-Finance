@@ -2,7 +2,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // API Configuration
 
-
     // DOM Elements
     const profitAnalysisSection = document.getElementById('profitAnalysis');
     const filterPeriodSelect = document.getElementById('filterPeriod');
@@ -13,6 +12,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const profitAnalysisTableBody = document.querySelector('#profitAnalysisTable tbody');
     const loadingIndicator = document.getElementById('loadingIndicator');
     const logoutBtn = document.getElementById('logout');
+
+    // Mobile sidebar elements
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    // Mobile sidebar functionality
+    if (sidebar && menuToggle && sidebarOverlay) {
+
+        const closeSidebar = () => {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('visible');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        };
+
+        menuToggle.addEventListener('click', () => {
+            const isOpen = sidebar.classList.toggle('open');
+
+            sidebarOverlay.classList.toggle('visible', isOpen);
+            menuToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        sidebar.querySelectorAll('.menu a').forEach(link => {
+            link.addEventListener('click', closeSidebar);
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                closeSidebar();
+            }
+        });
+    }
 
     const monthInput = document.getElementById('month');
     const yearInput = document.getElementById('year');
@@ -75,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    showFilterControls('monthly'); // Set default view
+    showFilterControls('monthly');
 
     filterPeriodSelect.addEventListener('change', (e) => {
         showFilterControls(e.target.value);
@@ -304,6 +337,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Export functionality (placeholders)
+    const exportPdfBtn = document.getElementById('exportPdfBtn');
+    const exportXmlBtn = document.getElementById('exportXmlBtn');
+
     exportPdfBtn.addEventListener('click', () => {
         // You'll need to use a library like jsPDF for full functionality
         showCustomAlert(

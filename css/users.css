@@ -1,3 +1,4 @@
+
 /* General Body Styling */
 body {
     background: linear-gradient(to right, #2c3e50, #27ae60);
@@ -19,8 +20,9 @@ body {
     top: 0;
     display: flex;
     flex-direction: column;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.3);
-    z-index: 100;
+    z-index: 1001;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .logo-title {
@@ -146,6 +148,7 @@ body {
     font-size: 1.2em;
     text-align: center;
 }
+
 #loadingIndicator .spinner {
     border: 4px solid rgba(255, 255, 255, 0.3);
     border-top: 4px solid #FCA311;
@@ -155,6 +158,7 @@ body {
     animation: spin 1s linear infinite;
     margin: 0 auto 10px auto;
 }
+
 /* Style for disabled buttons */
 button:disabled {
     cursor: not-allowed;
@@ -162,8 +166,7 @@ button:disabled {
     background-color: #ccc;
 }
 
-/* Profit Analysis Page & User Management Sections */
-#profitAnalysis,
+/* User Management Section */
 #userManagementSection {
     background: white;
     border-radius: 10px;
@@ -172,45 +175,7 @@ button:disabled {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#profitAnalysisControls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 20px;
-    align-items: center;
-}
-
-#profitAnalysisControls label {
-    font-weight: bold;
-    color: #333;
-}
-
-#profitAnalysisControls select,
-#profitAnalysisControls input[type="number"],
-#profitAnalysisControls input[type="date"] {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-}
-
-#profitAnalysisControls button {
-    background: #27ae60;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-}
-
-#profitAnalysisControls button:hover {
-    background: #1e8449;
-}
-
-/* ✅ Unified Table Styling */
-#profitAnalysisTable,
+/* User Table Styling */
 #userTable {
     width: 100%;
     border-collapse: collapse;
@@ -221,8 +186,6 @@ button:disabled {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-#profitAnalysisTable th,
-#profitAnalysisTable td,
 #userTable th,
 #userTable td {
     border: 1px solid rgba(221, 221, 221, 0.7);
@@ -231,7 +194,6 @@ button:disabled {
     color: #333;
 }
 
-#profitAnalysisTable th,
 #userTable th {
     background-color: #14213D;
     color: white;
@@ -242,27 +204,24 @@ button:disabled {
     border-bottom: 2px solid #FCA311;
 }
 
-#profitAnalysisTable th:first-child,
 #userTable th:first-child {
     border-top-left-radius: 10px;
 }
-#profitAnalysisTable th:last-child,
+
 #userTable th:last-child {
     border-top-right-radius: 10px;
 }
 
-#profitAnalysisTable tr:nth-child(even),
 #userTable tr:nth-child(even) {
     background-color: #f5f5f5;
 }
-#profitAnalysisTable tr:hover,
+
 #userTable tr:hover {
     background-color: #e0e0e0;
 }
 
-/* Action buttons inside tables */
-#userTable td button,
-#profitAnalysisTable td button {
+/* Action buttons inside the User Table */
+#userTable td button {
     padding: 6px 12px;
     margin: 0 4px;
     border: none;
@@ -277,6 +236,7 @@ button:disabled {
     background: #27ae60;
     color: white;
 }
+
 #userTable td button.edit:hover {
     background: #1e8449;
     transform: translateY(-2px);
@@ -287,86 +247,10 @@ button:disabled {
     background: #e74c3c;
     color: white;
 }
+
 #userTable td button.delete:hover {
     background: #c0392b;
     transform: translateY(-2px);
-}
-
-/* Styles for specific filter sections (initially hidden) */
-#monthYearSelector,
-#quarterYearSelector,
-#yearOnlySelector,
-#customRangeSelector {
-    display: none;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-#monthYearSelector.active,
-#quarterYearSelector.active,
-#yearOnlySelector.active,
-#customRangeSelector.active {
-    display: flex;
-}
-
-/* Styles for Custom Date Range Picker */
-#customRangeSelector {
-    flex-direction: row;
-    gap: 10px;
-    align-items: center;
-}
-
-#customRangeSelector label {
-    font-weight: bold;
-    color: #333;
-}
-
-#customRangeSelector input[type="date"] {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-}
-
-/* Add some spacing for the controls */
-#profitAnalysisControls > div {
-    margin-top: 15px;
-    padding: 10px;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-}
-
-/* Styles for Export Options */
-#exportOptions {
-    margin-top: 20px;
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-#exportOptions label {
-    font-weight: bold;
-    color: #333;
-}
-
-#exportOptions button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-#exportOptions button:hover {
-    background: #0056b3;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* User Management Specific Styles */
@@ -456,101 +340,126 @@ button:disabled {
 .reset-password-btn:hover {
     background-color: #e67e22;
 }
-/* Remove underline & blue color from all links */
+
+/* Remove underline and blue color from all links */
 a {
-  text-decoration: none;
-  color: inherit; /* takes the color from the parent element */
+    text-decoration: none;
+    color: inherit;
 }
 
-/* Responsive adjustments for Profit Analysis */
+/* Mobile Navigation */
+.menu-toggle {
+    display: none;
+}
+
+.sidebar-overlay {
+    display: none;
+}
+
+/* Responsive User Management Styling */
 @media (max-width: 768px) {
-    #profitAnalysis {
-        width: 90%;
-    }
-    #profitAnalysisControls {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    #profitAnalysisControls > div {
-        width: 100%;
-        margin-bottom: 10px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    #profitAnalysisControls label {
-        margin-bottom: 5px;
-    }
-    #profitAnalysisControls select,
-    #profitAnalysisControls input[type="number"],
-    #profitAnalysisControls input[type="date"],
-    #profitAnalysisControls button {
-        width: calc(100% - 16px);
-    }
-    #profitAnalysisControls > div > button {
-        width: 100%;
-    }
-    #profitAnalysisTable {
-        font-size: 14px;
-    }
-    #exportOptions {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    #exportOptions button {
-        width: calc(100% - 16px);
+    .menu-toggle {
+        display: block;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 102;
+        padding: 10px 14px;
+        border: none;
+        border-radius: 6px;
+        background: #14213D;
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
     }
 
-    /* Responsive adjustments for User Management section */
+    .sidebar {
+        box-sizing: border-box;
+        width: 250px;
+        left: -270px;
+        height: 100vh;
+        overflow-y: auto;
+        transition: left 0.3s ease;
+        z-index: 101;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .sidebar-overlay.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .container {
+        margin-left: 0;
+        width: 100%;
+        min-width: 0;
+        padding: 70px 15px 20px;
+    }
+
+    #userManagementSection {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
     .user-controls {
         flex-direction: column;
         align-items: flex-start;
     }
+
     .user-controls button {
         width: 100%;
     }
-    #userManagementSection h3 {
-        font-size: 1.3rem;
+
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
+
+    #userTable {
+        min-width: 650px;
+        font-size: 14px;
+    }
+
     #userTable th,
     #userTable td {
         padding: 8px 10px;
         font-size: 0.85rem;
     }
+
     #userTable td:last-child {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        align-items: flex-start;
+        display: table-cell;
+        white-space: nowrap;
     }
 }
 
 @media (max-width: 480px) {
-    #profitAnalysis {
-        width: 95%;
-        padding: 15px;
-    }
-    #profitAnalysisTable {
-        font-size: 12px;
-    }
-    #profitAnalysisTable th,
-    #profitAnalysisTable td {
-        padding: 8px;
-    }
-    #exportOptions label {
-        margin-bottom: 5px;
-    }
-    #exportOptions button {
-        width: 100%;
+    .container {
+        padding: 65px 10px 15px;
     }
 
-    /* Responsive adjustments for User Management section */
     #userManagementSection {
-        width: 95%;
         padding: 15px;
     }
+
     #userTable {
         font-size: 12px;
     }
+
     #userTable th,
     #userTable td {
         padding: 8px;

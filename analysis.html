@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,24 +12,22 @@
     <script src="js/analysis.js" defer></script>
 
     <style>
-        /* Rolling Page Load Animation */
-        @keyframes rollIn {
-            0% {
+        @keyframes rollOut {
+            to {
+                transform: translateY(-100vh) rotate(-15deg);
                 opacity: 0;
-                transform: translateY(100vh) rotate(30deg);
             }
-            100% {
-                opacity: 1;
-                transform: translateY(0) rotate(0);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
         }
 
         .rolling-load {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: #14213D;
             z-index: 9999;
             display: flex;
@@ -39,13 +36,6 @@
             flex-direction: column;
             animation: rollOut 0.6s ease-out forwards;
             animation-delay: 0.8s;
-        }
-
-        @keyframes rollOut {
-            to {
-                transform: translateY(-100vh) rotate(-15deg);
-                opacity: 0;
-            }
         }
 
         .rolling-load-spinner {
@@ -58,52 +48,39 @@
             margin-bottom: 20px;
         }
 
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Basic styling for loading indicator */
         #loadingIndicator {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.7);
+            background: rgba(0,0,0,0.7);
             color: white;
             padding: 20px 30px;
             border-radius: 8px;
-            z-index: 1000;
-            font-size: 1.2em;
+            z-index: 1002;
+            font-size: 1.1em;
             text-align: center;
         }
 
         #loadingIndicator .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
+            border: 4px solid rgba(255,255,255,0.3);
             border-top: 4px solid #FCA311;
             border-radius: 50%;
             width: 30px;
             height: 30px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 10px auto;
+            margin: 0 auto 10px;
         }
 
-        /* Style for disabled buttons */
         button:disabled {
             cursor: not-allowed;
             opacity: 0.6;
-            background-color: #ccc;
         }
 
-        /* Detailed Analysis Button */
         .btn-detailed-analysis {
             display: inline-block;
-            background-color: #FCA311;
+            background: #27ae60;
             color: #fff;
             padding: 10px 20px;
             border-radius: 6px;
@@ -113,20 +90,35 @@
         }
 
         .btn-detailed-analysis:hover {
-            background-color: #e5940f;
+            background: #219150;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Rolling Load Effect -->
+    <!-- Mobile Navigation -->
+    <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-controls="sidebar"
+        aria-expanded="false">
+        &#9776;
+    </button>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Page Loading Animation -->
     <div class="rolling-load">
         <div class="rolling-load-spinner"></div>
         <p>Loading...</p>
     </div>
 
-    <div class="sidebar">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+
         <div class="logo-title">
             <img src="images/firstlend.png" alt="Logo" class="logo">
             <h2>FIRST LEND</h2>
@@ -144,27 +136,38 @@
             <li class="active">
                 <a href="analysis.html">📊 Profit Analytics</a>
             </li>
-            <li><a href="index.html" id="logout">🚪 Logout</a></li>
+            <li><a href="capital-position.html">🏦 Capital Position</a></li>
+            <li>
+                <a href="index.html" id="logout">🚪 Logout</a>
+            </li>
         </ul>
+
     </div>
 
+    <!-- Main Content -->
     <div class="container">
+
         <div id="profitAnalysis">
 
-            <h2><i class="fas fa-chart-line"></i> Profit Analytics</h2>
+            <h2>📊 Profit Analytics</h2>
 
+            <!-- Filters -->
             <div id="profitAnalysisControls">
 
-                <label for="filterPeriod">Filter By:</label>
+                <div class="filter-period">
+                    <label for="filterPeriod">Filter By:</label>
 
-                <select id="filterPeriod">
-                    <option value="monthly">Monthly</option>
-                    <option value="quarterly">Quarterly</option>
-                    <option value="yearly">Yearly</option>
-                    <option value="custom">Custom Range</option>
-                </select>
+                    <select id="filterPeriod">
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="yearly">Yearly</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                </div>
 
+                <!-- Monthly Filter -->
                 <div id="monthYearSelector">
+
                     <label for="month">Month:</label>
 
                     <select id="month">
@@ -186,9 +189,12 @@
                     <input type="number" id="year" placeholder="YYYY">
 
                     <button id="applyMonthYearFilter">Apply</button>
+
                 </div>
 
+                <!-- Quarterly Filter -->
                 <div id="quarterYearSelector">
+
                     <label for="quarter">Quarter:</label>
 
                     <select id="quarter">
@@ -202,16 +208,22 @@
                     <input type="number" id="yearQuarter" placeholder="YYYY">
 
                     <button id="applyQuarterYearFilter">Apply</button>
+
                 </div>
 
+                <!-- Yearly Filter -->
                 <div id="yearOnlySelector">
+
                     <label for="onlyYear">Year:</label>
                     <input type="number" id="onlyYear" placeholder="YYYY">
 
                     <button id="applyYearFilter">Apply</button>
+
                 </div>
 
+                <!-- Custom Date Filter -->
                 <div id="customRangeSelector">
+
                     <label for="startDate">Start Date:</label>
                     <input type="date" id="startDate">
 
@@ -219,11 +231,14 @@
                     <input type="date" id="endDate">
 
                     <button id="applyCustomRangeFilter">Apply</button>
+
                 </div>
 
             </div>
 
+            <!-- Analytics Table -->
             <div class="table-container">
+
                 <table id="profitAnalysisTable">
 
                     <thead>
@@ -242,61 +257,58 @@
                     </thead>
 
                     <tbody>
-                        <!-- Data will be inserted here by JavaScript -->
+                        <!-- Data populated by JavaScript -->
                     </tbody>
 
                 </table>
+
             </div>
 
+            <!-- Export Options -->
             <div id="exportOptions">
+
                 <label>Export As:</label>
 
                 <button id="exportPdfBtn">
-                    <i class="fas fa-file-pdf"></i> PDF
+                    PDF
                 </button>
 
                 <button id="exportXmlBtn">
-                    <i class="fas fa-file-code"></i> XML
+                    XML
                 </button>
-            </div>
-
-            <!-- Detailed Analysis Button -->
-            <div id="detailedAnalysisBtnContainer"
-                 style="margin-top: 20px; text-align: right;">
-
-                <a href="detailedanalysis.html" class="btn-detailed-analysis">
-                    📊 View Detailed Analysis
-                </a>
 
             </div>
+
+            
 
         </div>
+
     </div>
 
     <!-- Loading Indicator -->
-    <div id="loadingIndicator" style="display: none;">
+    <div id="loadingIndicator">
         <div class="spinner"></div>
         <p>Loading data...</p>
     </div>
 
+    <!-- Custom Alert Container -->
+    <div id="customAlertContainer"></div>
+
     <!-- Custom Message Modal -->
-    <div id="customMessageModal"
-         style="display: none; position: fixed; top: 50%; left: 50%;
-         transform: translate(-50%, -50%); background-color: white;
-         padding: 20px; border: 1px solid #ccc;
-         box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 1001;">
+    <div id="customMessageModal">
 
         <h3 id="modalTitle"></h3>
         <p id="modalMessage"></p>
+
         <button id="modalCloseBtn">Close</button>
 
     </div>
 
     <script>
-        // Hide the rolling loader after page load
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                const rollingLoader = document.querySelector('.rolling-load');
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                const rollingLoader =
+                    document.querySelector('.rolling-load');
 
                 if (rollingLoader) {
                     rollingLoader.style.display = 'none';

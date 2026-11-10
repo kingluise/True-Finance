@@ -1,25 +1,29 @@
+/* =====================================
+   GLOBAL STYLES
+===================================== */
 
-/* =========================================
-   FIRSTLEND PROFIT ANALYSIS
-   Dashboard-matched styling and responsiveness
-   ========================================= */
-
-/* Global page layout */
 * {
     box-sizing: border-box;
 }
 
+html,
 body {
+    width: 100%;
+    max-width: 100%;
     margin: 0;
+    overflow-x: hidden;
+}
+
+body {
     font-family: Arial, sans-serif;
     background: linear-gradient(to right, #2c3e50, #27ae60);
     color: #fff;
     min-height: 100vh;
 }
 
-/* =========================================
+/* =====================================
    SIDEBAR
-   ========================================= */
+===================================== */
 
 .sidebar {
     width: 250px;
@@ -33,6 +37,7 @@ body {
     flex-direction: column;
     z-index: 1001;
     overflow-y: auto;
+    transition: left 0.3s ease;
 }
 
 .logo-title {
@@ -79,13 +84,48 @@ body {
 }
 
 .menu a:hover,
-.menu a.active {
+.menu li.active a {
     background: #27ae60;
 }
 
-/* =========================================
+/* =====================================
+   MOBILE MENU BUTTON AND OVERLAY
+===================================== */
+
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1003;
+    width: 44px;
+    height: 44px;
+    font-size: 22px;
+    line-height: 1;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.sidebar-overlay.visible {
+    display: block;
+}
+
+/* =====================================
    MAIN CONTENT
-   ========================================= */
+===================================== */
 
 .container {
     margin-left: 270px;
@@ -93,16 +133,6 @@ body {
     min-width: 0;
     width: calc(100% - 270px);
 }
-
-.container > h1,
-.container > h2 {
-    color: #fff;
-    margin-top: 0;
-}
-
-/* =========================================
-   PROFIT ANALYSIS PANEL
-   ========================================= */
 
 #profitAnalysis {
     width: 100%;
@@ -122,9 +152,13 @@ body {
     color: #2c3e50;
 }
 
-/* =========================================
+#profitAnalysis h2 {
+    margin-top: 0;
+}
+
+/* =====================================
    FILTER CONTROLS
-   ========================================= */
+===================================== */
 
 #profitAnalysisControls {
     display: flex;
@@ -168,7 +202,6 @@ body {
 
 #profitAnalysisControls button {
     min-height: 40px;
-    width: auto;
     padding: 10px 16px;
     background: #27ae60;
     color: #fff;
@@ -184,7 +217,8 @@ body {
     background: #219150;
 }
 
-/* Preserve JavaScript-controlled visibility */
+/* Filter visibility */
+
 #monthYearSelector,
 #quarterYearSelector,
 #yearOnlySelector,
@@ -195,37 +229,33 @@ body {
     flex-wrap: wrap;
 }
 
-#monthYearSelector.active,
-#quarterYearSelector.active,
-#yearOnlySelector.active,
-#customRangeSelector.active {
-    display: flex;
-}
+/* =====================================
+   ANALYTICS TABLE
+===================================== */
 
-/* =========================================
-   ANALYSIS TABLE
-   ========================================= */
+.table-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
 #profitAnalysisTable {
     width: 100%;
-    min-width: 0;
-    max-width: 100%;
+    min-width: 1000px;
     border-collapse: collapse;
     margin-top: 15px;
     background: #fff;
     color: #333;
     font-size: 12px;
-    table-layout: fixed;
+    table-layout: auto;
 }
 
 #profitAnalysisTable th,
 #profitAnalysisTable td {
     border: 1px solid #e0e0e0;
-    padding: 10px 6px;
+    padding: 10px 8px;
     text-align: left;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: normal;
     vertical-align: middle;
 }
 
@@ -250,9 +280,14 @@ body {
     background: #e8f5ec;
 }
 
-/* =========================================
+.analytics-total-row {
+    background: #e8f5ec !important;
+    font-weight: bold;
+}
+
+/* =====================================
    EXPORT BUTTONS
-   ========================================= */
+===================================== */
 
 #exportOptions {
     display: flex;
@@ -268,7 +303,6 @@ body {
 }
 
 #exportOptions button {
-    width: auto;
     min-height: 40px;
     padding: 10px 18px;
     background: #27ae60;
@@ -285,34 +319,94 @@ body {
     background: #219150;
 }
 
-/* Detailed analysis button */
+/* =====================================
+   DETAILED ANALYSIS BUTTON
+===================================== */
+
 .btn-detailed-analysis {
     display: inline-block;
     padding: 11px 18px;
     background: #27ae60;
     color: #fff;
-    border: none;
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
-    cursor: pointer;
 }
 
 .btn-detailed-analysis:hover {
     background: #219150;
 }
 
-/* =========================================
-   HIDDEN ELEMENTS
-   ========================================= */
+/* =====================================
+   CUSTOM ALERTS
+===================================== */
 
-.hidden {
-    display: none !important;
+#customAlertContainer {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1100;
+    width: min(350px, calc(100% - 30px));
 }
 
-/* =========================================
-   TABLET RESPONSIVENESS
-   ========================================= */
+.custom-alert {
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.custom-alert-error {
+    background: #c0392b;
+}
+
+.custom-alert-success {
+    background: #27ae60;
+}
+
+.custom-alert-info {
+    background: #2980b9;
+}
+
+.custom-alert .close-btn {
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.custom-alert.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* =====================================
+   LOADING AND MODAL
+===================================== */
+
+#customMessageModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    color: #333;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1002;
+    width: min(420px, calc(100% - 30px));
+    max-width: calc(100% - 30px);
+    overflow-wrap: anywhere;
+}
+
+/* =====================================
+   TABLET
+===================================== */
 
 @media (max-width: 1024px) {
     .container {
@@ -326,85 +420,86 @@ body {
     #profitAnalysisControls {
         gap: 10px;
     }
-
-    #profitAnalysisTable th,
-    #profitAnalysisTable td {
-        padding: 8px 4px;
-    }
 }
 
-/* =========================================
-   MOBILE RESPONSIVENESS
-   ========================================= */
+/* =====================================
+   MOBILE
+===================================== */
 
 @media (max-width: 768px) {
-
     body {
         display: block;
         min-height: 100vh;
     }
 
     .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-        max-height: none;
-        padding: 12px;
-        overflow: visible;
+        position: fixed;
+        top: 0;
+        left: -270px;
+        width: 250px;
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100vh;
+        padding: 15px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 1001;
+        transition: left 0.3s ease;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .menu-toggle {
+        display: block;
     }
 
     .logo-title {
-        margin-bottom: 15px;
-    }
-
-    .logo {
-        width: 45px;
-        height: 45px;
-    }
-
-    .sidebar h2 {
-        font-size: 17px;
+        margin-bottom: 30px;
     }
 
     .menu {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 5px;
+        display: block;
     }
 
     .menu li {
-        margin: 3px 0;
-        min-width: 0;
+        margin: 15px 0;
     }
 
     .menu a {
-        padding: 10px;
-        font-size: 13px;
-        overflow-wrap: anywhere;
+        padding: 10px 15px;
+        font-size: 14px;
     }
 
     .container {
         width: 100%;
         margin-left: 0;
-        padding: 15px;
+        padding: 70px 15px 20px;
     }
 
     #profitAnalysis {
         width: 100%;
+        max-width: 100%;
+        margin: 10px auto 20px;
         padding: 15px;
-        margin-top: 10px;
-        overflow: visible;
     }
 
     #profitAnalysisControls {
         flex-direction: column;
         align-items: stretch;
+        width: 100%;
     }
 
     #profitAnalysisControls > div {
         width: 100%;
+        min-width: 0;
         flex-direction: column;
         align-items: stretch;
+    }
+
+    #profitAnalysisControls label {
+        width: 100%;
     }
 
     #profitAnalysisControls select,
@@ -412,11 +507,7 @@ body {
     #profitAnalysisControls input[type="date"],
     #profitAnalysisControls button {
         width: 100%;
-    }
-
-    #customRangeSelector {
-        flex-direction: column;
-        align-items: stretch;
+        min-width: 0;
     }
 
     #exportOptions {
@@ -428,21 +519,21 @@ body {
         width: 100%;
     }
 
+    #detailedAnalysisBtnContainer {
+        text-align: left !important;
+    }
+
     .btn-detailed-analysis {
         display: block;
         width: 100%;
         text-align: center;
     }
 
-    /* Keep the complete table accessible by horizontal scrolling */
     #profitAnalysisTable {
-        display: block;
-        width: 100%;
+        width: 1050px;
         min-width: 1050px;
-        max-width: 100%;
+        max-width: none;
         table-layout: auto;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
     }
 
     #profitAnalysisTable th,
@@ -450,43 +541,19 @@ body {
         white-space: nowrap;
         padding: 9px;
     }
+
+    #loadingIndicator {
+        max-width: calc(100% - 30px);
+    }
 }
 
-/* =========================================
+/* =====================================
    SMALL MOBILE PHONES
-   ========================================= */
+===================================== */
 
 @media (max-width: 480px) {
-
     .container {
-        padding: 10px;
-    }
-
-    .sidebar {
-        padding: 10px;
-    }
-
-    .logo-title {
-        margin-bottom: 12px;
-    }
-
-    .logo {
-        width: 40px;
-        height: 40px;
-    }
-
-    .sidebar h2 {
-        font-size: 15px;
-    }
-
-    .menu {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .menu a {
-        padding: 9px 7px;
-        font-size: 12px;
-        gap: 6px;
+        padding: 68px 10px 15px;
     }
 
     #profitAnalysis {
@@ -494,19 +561,16 @@ body {
         border-radius: 8px;
     }
 
+    #profitAnalysis h2 {
+        font-size: 20px;
+    }
+
     #profitAnalysisControls > div {
         padding: 10px;
     }
 
-    #profitAnalysisControls select,
-    #profitAnalysisControls input[type="number"],
-    #profitAnalysisControls input[type="date"] {
-        font-size: 14px;
-        min-height: 42px;
-    }
-
-    #profitAnalysisTable th,
-    #profitAnalysisTable td {
-        padding: 9px;
+    #profitAnalysisTable {
+        width: 1050px;
+        min-width: 1050px;
     }
 }

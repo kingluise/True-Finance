@@ -1,13 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management</title> <!-- UPDATED TITLE -->
+    <title>User Management</title>
     <link rel="icon" type="image/x-icon" href="/images/">
-    <link rel="stylesheet" href="css/users.css"> <!-- Reusing CSS for general styling -->
+    <link rel="stylesheet" href="css/users.css">
     <script src="js/config.js" defer></script>
     <script src="js/users.js" defer></script>
+
     <style>
         /* Rolling Page Load Animation */
         @keyframes rollIn {
@@ -20,6 +22,7 @@
                 transform: translateY(0) rotate(0);
             }
         }
+
         .rolling-load {
             position: fixed;
             top: 0;
@@ -35,12 +38,14 @@
             animation: rollOut 0.6s ease-out forwards;
             animation-delay: 0.8s;
         }
+
         @keyframes rollOut {
             to {
                 transform: translateY(-100vh) rotate(-15deg);
                 opacity: 0;
             }
         }
+
         .rolling-load-spinner {
             width: 60px;
             height: 60px;
@@ -50,13 +55,15 @@
             animation: spin 1s linear infinite;
             margin-bottom: 20px;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        /* Basic styling for loading indicator */
+
+        /* Loading Indicator */
         #loadingIndicator {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
             top: 50%;
             left: 50%;
@@ -69,6 +76,7 @@
             font-size: 1.2em;
             text-align: center;
         }
+
         #loadingIndicator .spinner {
             border: 4px solid rgba(255, 255, 255, 0.3);
             border-top: 4px solid #FCA311;
@@ -78,13 +86,14 @@
             animation: spin 1s linear infinite;
             margin: 0 auto 10px auto;
         }
-        /* Style for disabled buttons */
+
         button:disabled {
             cursor: not-allowed;
             opacity: 0.6;
-            background-color: #ccc; /* Or a specific disabled color */
+            background-color: #ccc;
         }
-        /* Added modal styles */
+
+        /* Existing Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -98,6 +107,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .modal-content {
             background-color: #fefefe;
             margin: auto;
@@ -108,35 +118,83 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
         }
+
         .close-button {
             color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
         }
+
         .close-button:hover,
         .close-button:focus {
             color: black;
             text-decoration: none;
             cursor: pointer;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
         }
-        .form-group input, .form-group select {
+
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
+        /* Mobile Sidebar Button */
+        .menu-toggle {
+            display: none;
+        }
+
+        /* Mobile Modal Adjustment */
+        @media (max-width: 768px) {
+            .modal {
+                padding: 15px;
+                box-sizing: border-box;
+            }
+
+            .modal-content {
+                width: 100%;
+                max-width: 500px;
+                max-height: calc(100vh - 30px);
+                overflow-y: auto;
+                box-sizing: border-box;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-content {
+                padding: 15px;
+            }
+
+            .form-group input,
+            .form-group select {
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
+
 <body>
+
+    <!-- Mobile Menu Toggle -->
+    <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-label="Toggle navigation">
+        ☰
+    </button>
 
     <!-- Rolling Load Effect -->
     <div class="rolling-load">
@@ -144,11 +202,12 @@
         <p>Loading...</p>
     </div>
 
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="logo-title">
             <img src="images/firstlend.png" alt="Logo" class="logo">
             <h2>FIRST LEND</h2>
         </div>
+
         <ul class="menu">
             <li><a href="dashboard.html">🏠 Home</a></li>
             <li><a href="customer.html">👥 Manage Customers</a></li>
@@ -164,16 +223,19 @@
         </ul>
     </div>
 
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <div class="container">
         <div id="userManagementSection">
             <h2><i class="fas fa-users"></i>C-Panel Management</h2>
 
-    <div class="user-controls">
-         <button id="addUserBtn">Add User</button>
-         <a href="https://da22.host-ww.net/roundcube/" target="_blank">
-         <button id="webmailBtn">Webmail</button>
-         </a>
-    </div>
+            <div class="user-controls">
+                <button id="addUserBtn">Add User</button>
+                <a href="https://da22.host-ww.net/roundcube/" target="_blank">
+                    <button id="webmailBtn">Webmail</button>
+                </a>
+            </div>
 
             <div class="table-container">
                 <table id="userTable">
@@ -186,6 +248,7 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
+
                     <tbody id="userTableBody">
                         <!-- User data will be inserted here by JavaScript -->
                     </tbody>
@@ -198,20 +261,25 @@
     <div id="userModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
+
             <h3 id="modalTitle">Add User</h3>
+
             <form id="userForm">
                 <div class="form-group">
                     <label for="fullName">Full Name</label>
                     <input type="text" id="fullName" name="fullName" required>
                 </div>
+
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
                 </div>
+
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
+
                 <div class="form-group">
                     <label for="role">Role</label>
                     <select id="role" name="role" required>
@@ -219,6 +287,7 @@
                         <option value="operator">Operator</option>
                     </select>
                 </div>
+
                 <button type="submit" id="submitBtn">Submit</button>
             </form>
         </div>
@@ -230,7 +299,7 @@
         <p>Loading data...</p>
     </div>
 
-    <!-- Custom Message Modal (for displayMessageModal function) -->
+    <!-- Custom Message Modal -->
     <div id="customMessageModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 1001;">
         <h3 id="modalTitle"></h3>
         <p id="modalMessage"></p>
@@ -238,15 +307,17 @@
     </div>
 
     <script>
-        // Add this script to hide the rolling loader when page is loaded
+        // Hide rolling loader when page is loaded
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {
                 const rollingLoader = document.querySelector('.rolling-load');
+
                 if (rollingLoader) {
                     rollingLoader.style.display = 'none';
                 }
             }, 1000);
         });
     </script>
+
 </body>
 </html>

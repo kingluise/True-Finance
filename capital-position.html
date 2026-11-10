@@ -13,10 +13,25 @@
 </head>
 <body>
 
-    <div class="sidebar">
+    <!-- MOBILE MENU BUTTON -->
+    <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-controls="sidebar">
+        ☰
+    </button>
+
+    <!-- MOBILE SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+
         <div class="logo-title">
             <img src="images/firstlend.png" alt="Logo" class="logo">
-            <h2>TRUE FINANCE LIMITED</h2>
+            <h2>FIRST LEND</h2>
         </div>
 
         <ul class="menu">
@@ -34,8 +49,10 @@
             </li>
             <li><a href="index.html" id="logout">🚪 Logout</a></li>
         </ul>
+
     </div>
 
+    <!-- MAIN CONTENT -->
     <main class="main-content">
 
         <header class="page-header">
