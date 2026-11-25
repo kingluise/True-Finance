@@ -1,3 +1,4 @@
+
 // customer.js
 document.addEventListener("DOMContentLoaded", () => {
     const addCustomerBtn = document.getElementById("addCustomerBtn");
@@ -15,23 +16,233 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentEditId = null;
     let customersCache = [];
 
+    // Stores temporary document URLs so they can be released when the modal closes.
+    const documentObjectUrls = {};
+
     // ==================== PAGINATION ====================
     let currentPage = 1;
     const pageSize = 10;
     let totalCustomers = 0;
     let currentSearchTerm = "";
 
-    // Show Add Customer Modal
+    // ==================== DOCUMENT HELPERS ====================
+
+    function revokeDocumentUrls() {
+        Object.keys(documentObjectUrls).forEach(key => {
+            URL.revokeObjectURL(documentObjectUrls[key]);
+            delete documentObjectUrls[key];
+        });
+    }
+
+    function resetDocumentDisplay(imageId, linkId, statusId) {
+        const image = document.getElementById(imageId);
+        const link = document.getElementById(linkId);
+        const status = document.getElementById(statusId);
+
+        if (image) {
+            image.removeAttribute("src");
+            image.hidden = true;
+        }
+
+        if (link) {
+            link.removeAttribute("href");
+            link.hidden = true;
+        }
+
+        if (status) {
+            status.textContent = "Not uploaded";
+        }
+    }
+
+    async function loadCustomerDocument(
+        customerId,
+        documentType,
+        imageId,
+        linkId,
+        statusId,
+        token
+    ) {
+        const image = document.getElementById(imageId);
+        const link = document.getElementById(linkId);
+        const status = document.getElementById(statusId);
+
+        if (!image || !link) return;
+
+        if (status) {
+            status.textContent = "Loading document...";
+        }
+
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/PublicApplication/customers/${customerId}/documents/${documentType}`,
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (response.status === 404) {
+                if (status) status.textContent = "Not uploaded";
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error(`Unable to load ${documentType}`);
+            }
+
+            const blob = await response.blob();
+
+            const contentType =
+                response.headers.get("Content-Type") ||
+                blob.type ||
+                "";
+
+            const objectUrl = URL.createObjectURL(blob);
+
+            documentObjectUrls[documentType] = objectUrl;
+
+            link.href = objectUrl;
+            link.hidden = false;
+
+            if (contentType.toLowerCase().startsWith("image/")) {
+                image.src = objectUrl;
+                image.hidden = false;
+
+                link.textContent = "Open full document";
+
+                if (status) {
+                    status.textContent = "Image loaded";
+                }
+            } else {
+                image.hidden = true;
+
+                link.textContent = contentType.toLowerCase().includes("pdf")
+                    ? "Open PDF document"
+                    : "Open document";
+
+                if (status) {
+                    status.textContent = "Document available";
+                }
+            }
+
+        } catch (err) {
+            console.error(`Error loading ${documentType}:`, err);
+
+            if (status) {
+                status.textContent = "Could not load document";
+            }
+        }
+    }
+
+    function resetAllCustomerDocuments() {
+        revokeDocumentUrls();
+
+        resetDocumentDisplay(
+            "viewPassportPhoto",
+            "viewPassportPhotoLink",
+            "viewPassportPhotoStatus"
+        );
+
+        resetDocumentDisplay(
+            "viewIdPhoto",
+            "viewIdPhotoLink",
+            "viewIdPhotoStatus"
+        );
+
+        resetDocumentDisplay(
+            "viewUtilityBill",
+            "viewUtilityBillLink",
+            "viewUtilityBillStatus"
+        );
+
+        resetDocumentDisplay(
+            "viewGuarantorPassport",
+            "viewGuarantorPassportLink",
+            "viewGuarantorPassportStatus"
+        );
+
+        resetDocumentDisplay(
+            "viewGuarantorId",
+            "viewGuarantorIdLink",
+            "viewGuarantorIdStatus"
+        );
+
+        resetDocumentDisplay(
+            "viewGuarantorUtilityBill",
+            "viewGuarantorUtilityBillLink",
+            "viewGuarantorUtilityBillStatus"
+        );
+    }
+
+    async function loadAllCustomerDocuments(customerId, token) {
+        const documents = [
+            {
+                type: "passport",
+                imageId: "viewPassportPhoto",
+                linkId: "viewPassportPhotoLink",
+                statusId: "viewPassportPhotoStatus"
+            },
+            {
+                type: "id",
+                imageId: "viewIdPhoto",
+                linkId: "viewIdPhotoLink",
+                statusId: "viewIdPhotoStatus"
+            },
+            {
+                type: "utility-bill",
+                imageId: "viewUtilityBill",
+                linkId: "viewUtilityBillLink",
+                statusId: "viewUtilityBillStatus"
+            },
+            {
+                type: "guarantor-passport",
+                imageId: "viewGuarantorPassport",
+                linkId: "viewGuarantorPassportLink",
+                statusId: "viewGuarantorPassportStatus"
+            },
+            {
+                type: "guarantor-id",
+                imageId: "viewGuarantorId",
+                linkId: "viewGuarantorIdLink",
+                statusId: "viewGuarantorIdStatus"
+            },
+            {
+                type: "guarantor-utility-bill",
+                imageId: "viewGuarantorUtilityBill",
+                linkId: "viewGuarantorUtilityBillLink",
+                statusId: "viewGuarantorUtilityBillStatus"
+            }
+        ];
+
+        await Promise.all(
+            documents.map(doc =>
+                loadCustomerDocument(
+                    customerId,
+                    doc.type,
+                    doc.imageId,
+                    doc.linkId,
+                    doc.statusId,
+                    token
+                )
+            )
+        );
+    }
+
+    // ==================== SHOW ADD CUSTOMER MODAL ====================
+
     addCustomerBtn?.addEventListener("click", () => {
         customerFormContainer.classList.remove("hidden");
         customerFormContainer.classList.add("visible");
     });
 
-    // Close modals
+    // ==================== CLOSE MODALS ====================
+
     cancelButtons.forEach(btn => {
         btn.addEventListener("click", () => {
             customerFormContainer.classList.remove("visible");
             customerFormContainer.classList.add("hidden");
+
             editModal.classList.remove("visible");
             editModal.classList.add("hidden");
         });
@@ -41,14 +252,24 @@ document.addEventListener("DOMContentLoaded", () => {
     closeViewCustomerModalBtn?.addEventListener("click", () => {
         viewCustomerModal.classList.remove("visible");
         viewCustomerModal.classList.add("hidden");
+
+        resetAllCustomerDocuments();
     });
 
+    // Close customer details modal using footer button
+    document.getElementById("closeViewCustomerModalFooterBtn")
+        ?.addEventListener("click", () => {
+            closeViewCustomerModalBtn?.click();
+        });
+
     // ==================== FETCH CUSTOMERS ====================
+
     async function fetchCustomers(page = 1, searchTerm = "") {
         const token = localStorage.getItem("token");
 
         if (!token) {
-            customerListBody.innerHTML = `<tr><td colspan="5">Please log in to view customers.</td></tr>`;
+            customerListBody.innerHTML =
+                `<tr><td colspan="5">Please log in to view customers.</td></tr>`;
             return;
         }
 
@@ -85,13 +306,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (err) {
             console.error("Error fetching customers:", err);
-            customerListBody.innerHTML = `<tr><td colspan="5">Error loading customers</td></tr>`;
+
+            customerListBody.innerHTML =
+                `<tr><td colspan="5">Error loading customers</td></tr>`;
         }
     }
 
+    // ==================== POPULATE CUSTOMER TABLE ====================
+
     function populateCustomerTable(customers) {
         if (!customers.length) {
-            customerListBody.innerHTML = `<tr><td colspan="5" class="text-center">No customers found</td></tr>`;
+            customerListBody.innerHTML =
+                `<tr><td colspan="5" class="text-center">No customers found</td></tr>`;
             return;
         }
 
@@ -138,13 +364,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==================== PAGINATION CONTROLS ====================
+
     function renderPagination() {
-        let paginationContainer = document.getElementById("customer-pagination");
+        // Use the actual ID in customer.html.
+        // Keep support for the old dynamically-created ID as a fallback.
+        let paginationContainer =
+            document.getElementById("customerPagination") ||
+            document.getElementById("customer-pagination");
 
         // Create pagination container if it does not already exist
         if (!paginationContainer) {
             paginationContainer = document.createElement("div");
-            paginationContainer.id = "customer-pagination";
+            paginationContainer.id = "customerPagination";
 
             paginationContainer.style.display = "flex";
             paginationContainer.style.justifyContent = "center";
@@ -232,6 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==================== SEARCH ====================
+
     let searchTimeout;
 
     searchBar?.addEventListener("input", () => {
@@ -246,6 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==================== ADD CUSTOMER ====================
+
     customerForm?.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -304,12 +537,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==================== VIEW CUSTOMER ====================
+
     async function viewCustomer(id) {
         const token = localStorage.getItem("token");
 
         if (!token) return alert("Please log in.");
 
         try {
+            // Release document URLs from a previously viewed customer.
+            resetAllCustomerDocuments();
+
             const response = await fetch(`${API_BASE_URL}/Customer/${id}`, {
                 headers: {
                     "Content-Type": "application/json",
@@ -333,31 +570,61 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("viewPhone").textContent = customer.phoneNumber;
             document.getElementById("viewEmploymentStatus").textContent = customer.employmentStatus;
             document.getElementById("viewIncome").textContent = customer.monthlyIncome;
+
             document.getElementById("viewIdType").textContent = customer.idType;
             document.getElementById("viewIdNumber").textContent = customer.idNumber;
             document.getElementById("viewNin").textContent = customer.nin;
             document.getElementById("viewBvn").textContent = customer.bvn;
-            document.getElementById("viewGuarantorFullName").textContent = customer.guarantorFullName;
-            document.getElementById("viewRelationshipToBorrower").textContent = customer.guarantorRelationship;
-            document.getElementById("viewGuarantorResidentialAddress").textContent = customer.guarantorAddress;
-            document.getElementById("viewGuarantorPhone").textContent = customer.guarantorPhone;
-            document.getElementById("viewGuarantorEmail").textContent = customer.guarantorEmail;
-            document.getElementById("viewGuarantorIdType").textContent = customer.guarantorIdType;
-            document.getElementById("viewGuarantorIdNumber").textContent = customer.guarantorIdNumber;
 
-            document.getElementById("viewIdPhoto").src =
-                customer.idPhotoUrl ||
-                'https://placehold.co/400x300/e0e0e0/555?text=ID+Photo+Not+Found';
+            // Bank details
+            document.getElementById("viewBankName").textContent =
+                customer.bankName || "Not provided";
 
-            document.getElementById("viewPassportPhoto").src =
-                customer.passportPhotoUrl ||
-                'https://placehold.co/400x300/e0e0e0/555?text=Passport+Photo+Not+Found';
+            document.getElementById("viewAccountName").textContent =
+                customer.accountName || "Not provided";
 
-            // Store the full customer object directly on the button for later use
-            if (exportPdfBtn) exportPdfBtn.customerData = customer;
+            document.getElementById("viewAccountNumber").textContent =
+                customer.accountNumber || "Not provided";
+
+            // Guarantor information
+            document.getElementById("viewGuarantorFullName").textContent =
+                customer.guarantorFullName || "";
+
+            document.getElementById("viewRelationshipToBorrower").textContent =
+                customer.guarantorRelationship || "";
+
+            document.getElementById("viewGuarantorResidentialAddress").textContent =
+                customer.guarantorAddress || "";
+
+            document.getElementById("viewGuarantorPhone").textContent =
+                customer.guarantorPhone || "";
+
+            document.getElementById("viewGuarantorEmail").textContent =
+                customer.guarantorEmail || "";
+
+            // Retained from the original code.
+            // These values are displayed when the API supplies them.
+            const guarantorIdType = document.getElementById("viewGuarantorIdType");
+            const guarantorIdNumber = document.getElementById("viewGuarantorIdNumber");
+
+            if (guarantorIdType) {
+                guarantorIdType.textContent = customer.guarantorIdType || "";
+            }
+
+            if (guarantorIdNumber) {
+                guarantorIdNumber.textContent = customer.guarantorIdNumber || "";
+            }
+
+            // Store the full customer object directly on the button for later use.
+            if (exportPdfBtn) {
+                exportPdfBtn.customerData = customer;
+            }
 
             viewCustomerModal.classList.remove("hidden");
             viewCustomerModal.classList.add("visible");
+
+            // Load the six private documents using the authenticated API.
+            await loadAllCustomerDocuments(customer.id, token);
 
         } catch (err) {
             console.error(err);
@@ -366,33 +633,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==================== EXPORT PDF ====================
+
     async function exportToPdf() {
         const customer = exportPdfBtn.customerData;
 
         if (!customer) {
-            return console.error('Customer data not found for PDF export.');
+            return console.error("Customer data not found for PDF export.");
         }
 
-        // The modal must be visible for html2canvas to capture it
-        viewCustomerModal.classList.remove('hidden');
-        viewCustomerModal.classList.add('visible');
+        // The modal must be visible for html2canvas to capture it.
+        viewCustomerModal.classList.remove("hidden");
+        viewCustomerModal.classList.add("visible");
 
-        // Wait a short duration to ensure the modal content is fully rendered
+        // Wait for the modal and document images to render.
         await new Promise(resolve => setTimeout(resolve, 500));
 
-        const content = document.getElementById('customerDetailsContent');
+        const content = document.getElementById("customerDetailsContent");
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
+        const doc = new jsPDF("p", "mm", "a4");
 
         await html2canvas(content, { scale: 2 }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
+            const imgData = canvas.toDataURL("image/png");
             const imgWidth = 210;
             const imgHeight = canvas.height * imgWidth / canvas.width;
 
             let heightLeft = imgHeight;
             let position = 0;
 
-            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
 
             heightLeft -= 297;
 
@@ -403,7 +671,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 doc.addImage(
                     imgData,
-                    'PNG',
+                    "PNG",
                     0,
                     position,
                     imgWidth,
@@ -416,12 +684,12 @@ document.addEventListener("DOMContentLoaded", () => {
             doc.save(`${customer.fullName}_details.pdf`);
         });
 
-        // Hide the modal again after export is complete
-        viewCustomerModal.classList.add("hidden");
-        viewCustomerModal.classList.remove("visible");
+        // Keep the modal open after exporting.
+        // The original modal should not disappear just because PDF export finished.
     }
 
     // ==================== EDIT CUSTOMER ====================
+
     async function editCustomer(id) {
         currentEditId = id;
 
@@ -536,6 +804,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==================== DELETE CUSTOMER ====================
+
     async function deleteCustomer(id) {
         if (!confirm("Are you sure you want to delete this customer?")) return;
 
@@ -568,10 +837,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==================== EXPORT PDF BUTTON ====================
+
     exportPdfBtn?.addEventListener("click", () => {
         exportToPdf();
     });
 
     // ==================== INITIAL LOAD ====================
+
     fetchCustomers(1, "");
 });

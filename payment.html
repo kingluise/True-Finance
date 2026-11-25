@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -182,6 +183,7 @@
             padding: 0; margin: 0;
             display: flex; flex-wrap: wrap; gap: 5px;
         }
+
         .loan-id-list li {
             background-color: #e9ecef;
             padding: 4px 8px;
@@ -192,9 +194,86 @@
         }
 
         .hidden { display: none; }
-        .action-button { padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+
+        .action-button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
         .approve-btn { background: #28a745; color: #fff; }
         .reject-btn { background: #dc3545; color: #fff; }
+
+        /* Full Loan Settlement */
+        .settlement-panel {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #e1e5eb;
+            border-left: 4px solid #FCA311;
+            border-radius: 10px;
+            background: #f8f9fc;
+        }
+
+        .settlement-panel h4 {
+            margin-top: 0;
+            color: #14213D;
+        }
+
+        .settlement-description {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .settlement-amount {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #e1e5eb;
+        }
+
+        .settlement-amount strong {
+            display: block;
+            margin-top: 6px;
+            color: #14213D;
+            font-size: 1.5rem;
+        }
+
+        .settlement-button {
+            background: #14213D;
+            color: #fff;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .settlement-button:hover {
+            background: #FCA311;
+            color: #14213D;
+        }
+
+        .settlement-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .settlement-result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #d6e8dc;
+            background: #f1f8f3;
+            color: #245b36;
+        }
+
+        .settlement-result p {
+            margin: 6px 0;
+        }
+
+        .settlement-status {
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -261,21 +340,69 @@
                     <div id="paymentPlanContainer" class="payment-plan-section card hidden">
                         <h4>Loan Payment Plan</h4>
                         <div class="table-container">
-                        <table id="paymentPlanTable">
-                            <thead>
-                                <tr>
-                                    <th>Due Date</th>
-                                    <th>Amount Due</th>
-                                    <th>Status</th>
-                                    <th>Select</th>
-                                </tr>
-                            </thead>
-                            <tbody id="paymentPlanTableBody">
-                                <tr><td colspan="4" style="text-align: center;">Enter Loan ID to load payment plan.</td></tr>
-                            </tbody>
-                        </table>
+                            <table id="paymentPlanTable">
+                                <thead>
+                                    <tr>
+                                        <th>Due Date</th>
+                                        <th>Amount Due</th>
+                                        <th>Status</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="paymentPlanTableBody">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">
+                                            Enter Loan ID to load payment plan.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
+
                         <input type="hidden" id="selectedPaymentPlanItemId" name="selectedPaymentPlanItemId">
+
+                        <!-- Full Loan Settlement Summary -->
+                        <div id="fullSettlementPanel" class="settlement-panel hidden">
+                            <h4>Full Loan Settlement</h4>
+                            <p class="settlement-description">
+                                This option settles all outstanding installments on this loan.
+                                The settlement amount includes the remaining scheduled principal
+                                and interest. It will remain pending until an Admin approves it.
+                            </p>
+
+                            <div class="settlement-amount">
+                                <span>Outstanding Settlement Amount</span>
+                                <strong id="settlementAmount">₦0.00</strong>
+                                <small id="settlementInstallmentCount">
+                                    0 outstanding installments
+                                </small>
+                            </div>
+
+                            <button
+                                type="button"
+                                id="settleFullLoanBtn"
+                                class="settlement-button">
+                                Initiate Full Settlement
+                            </button>
+
+                            <div
+                                id="settlementResult"
+                                class="settlement-result hidden"
+                                role="status"
+                                aria-live="polite">
+                                <p id="settlementResultMessage"></p>
+                                <p>
+                                    Settlement Reference:
+                                    <strong id="settlementReference"></strong>
+                                </p>
+                                <p>
+                                    Status:
+                                    <strong class="settlement-status" id="settlementStatus">
+                                        Pending Admin Approval
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="paymentDetails" class="hidden">
@@ -283,6 +410,7 @@
                             <label for="amountPaid">Amount Paid:</label>
                             <input type="number" id="amountPaid" name="amountPaid" required>
                         </div>
+
                         <div class="form-group">
                             <label for="modeOfPayment">Mode of Payment:</label>
                             <select id="modeOfPayment" name="modeOfPayment" required>
@@ -291,13 +419,17 @@
                                 <option value="pos">POS</option>
                             </select>
                         </div>
+
                         <div class="form-group">
                             <label for="paymentDate">Payment Date:</label>
                             <input type="date" id="paymentDate" name="paymentDate" required>
                         </div>
+
                         <div class="form-actions">
                             <button type="submit" class="submit-button">Submit Payment</button>
-                            <button type="button" id="cancelLogPayment" class="cancel-button">Cancel</button>
+                            <button type="button" id="cancelLogPayment" class="cancel-button">
+                                Cancel
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -322,7 +454,9 @@
                             </tr>
                         </thead>
                         <tbody id="confirmationTableBody">
-                            <tr><td colspan="9">No payments to confirm.</td></tr>
+                            <tr>
+                                <td colspan="9">No payments to confirm.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -337,6 +471,7 @@
                     <input type="text" id="trackerLoanIdInput" placeholder="Enter Loan ID">
                     <button id="trackerFetchBtn" class="action-button">Search</button>
                 </div>
+
                 <div class="table-container">
                     <table id="paymentTrackerTable">
                         <thead>
@@ -350,7 +485,9 @@
                             </tr>
                         </thead>
                         <tbody id="paymentTrackerTableBody">
-                            <tr><td colspan="6">Enter a Loan ID to view payment history.</td></tr>
+                            <tr>
+                                <td colspan="6">Enter a Loan ID to view payment history.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -380,6 +517,7 @@
                 sidebar.classList.add('open');
                 overlay.classList.add('visible');
             }
+
             function closeSidebar() {
                 sidebar.classList.remove('open');
                 overlay.classList.remove('visible');

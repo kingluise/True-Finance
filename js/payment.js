@@ -19,14 +19,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const loanIdInput = document.getElementById('loanIdInput');
     const borrowerInfoSection = document.getElementById('borrowerInfo');
     const paymentDetailsSection = document.getElementById('paymentDetails');
-    const paymentPlanContainer = document = document.getElementById('paymentPlanContainer');
+    const paymentPlanContainer = document.getElementById('paymentPlanContainer');
     const paymentPlanTableBody = document.getElementById('paymentPlanTableBody');
     const selectedPaymentPlanItemIdInput = document.getElementById('selectedPaymentPlanItemId');
     const amountPaidInput = document.getElementById('amountPaid');
 
+    // Full Loan Settlement elements
+    const fullSettlementPanel = document.getElementById('fullSettlementPanel');
+    const settlementAmountDisplay = document.getElementById('settlementAmount');
+    const settlementInstallmentCount = document.getElementById('settlementInstallmentCount');
+    const settleFullLoanBtn = document.getElementById('settleFullLoanBtn');
+    const settlementResult = document.getElementById('settlementResult');
+    const settlementResultMessage = document.getElementById('settlementResultMessage');
+    const settlementReference = document.getElementById('settlementReference');
+    const settlementStatus = document.getElementById('settlementStatus');
+
     // Payment Confirmation elements
     const confirmationTableBody = document.getElementById('confirmationTableBody');
-    
+
     // Payment Tracker elements
     const trackerLoanIdInput = document.getElementById('trackerLoanIdInput');
     const trackerFetchBtn = document.getElementById('trackerFetchBtn');
@@ -85,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hideSection(paymentTrackerContainer);
         });
     });
-    
+
     // ================= LOGOUT =================
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
@@ -195,7 +205,128 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedPaymentPlanItemIdInput.value = e.target.value;
             });
         });
+
+        // ================= FULL SETTLEMENT SUMMARY =================
+
+        hideSection(fullSettlementPanel);
+        hideSection(settlementResult);
+
+        const pendingInstallments = loanData.repaymentSchedules.filter(
+            item => item.status === 0
+        );
+
+        if (pendingInstallments.length > 0) {
+
+            const outstandingAmount = pendingInstallments.reduce(
+                (total, item) => total + Number(item.totalAmount || 0),
+                0
+            );
+
+            settlementAmountDisplay.textContent =
+                `₦${outstandingAmount.toLocaleString('en-NG', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                })}`;
+
+            settlementInstallmentCount.textContent =
+                `${pendingInstallments.length} outstanding installment(s)`;
+
+            settleFullLoanBtn.dataset.loanId = loanIdInput.value.trim();
+            settleFullLoanBtn.disabled = false;
+            settleFullLoanBtn.textContent = 'Initiate Full Settlement';
+
+            showSection(fullSettlementPanel);
+        }
     };
+
+    // ================= INITIATE FULL LOAN SETTLEMENT =================
+
+    if (settleFullLoanBtn) {
+
+        settleFullLoanBtn.addEventListener('click', async () => {
+
+            const loanId = settleFullLoanBtn.dataset.loanId;
+
+            if (!loanId) {
+                showCustomAlert('Please fetch a valid loan first.', 'error');
+                return;
+            }
+
+            const confirmed = confirm(
+                `Are you sure you want to initiate full settlement?\n\n` +
+                `Outstanding Amount: ${settlementAmountDisplay.textContent}\n\n` +
+                `This settlement will require Admin approval.`
+            );
+
+            if (!confirmed) return;
+
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                showCustomAlert('Authentication failed. Please log in.', 'error');
+                return;
+            }
+
+            settleFullLoanBtn.disabled = true;
+            settleFullLoanBtn.textContent = 'Processing...';
+
+            try {
+
+                const response = await fetch(
+                    `${API_BASE_URL}/Payment/settle/${loanId}`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    console.error('Full settlement API response:', result);
+
+                    const errorMessage =
+                    result.message ||
+                    result.detail ||
+                    result.title ||
+                    (result.errors
+                    ? Object.values(result.errors).flat().join('\n')
+                    : null) ||
+                    'Failed to initiate full settlement.';
+
+                    throw new Error(errorMessage);
+                }
+
+                settlementResultMessage.textContent =
+                    result.message || 'Full settlement initiated successfully.';
+
+                settlementReference.textContent =
+                    result.settlementReference || result.reference || 'N/A';
+
+                settlementStatus.textContent = 'Pending Admin Approval';
+
+                showSection(settlementResult);
+
+                settleFullLoanBtn.textContent = 'Settlement Initiated';
+
+                showCustomAlert(
+                    'Full settlement initiated. Awaiting Admin approval.',
+                    'success'
+                );
+
+            } catch (error) {
+
+                console.error('Full settlement error:', error);
+
+                showCustomAlert(error.message, 'error');
+
+                settleFullLoanBtn.disabled = false;
+                settleFullLoanBtn.textContent = 'Initiate Full Settlement';
+            }
+        });
+    }
 
     // ================= LOG PAYMENT =================
     if (paymentForm) {
@@ -219,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showCustomAlert('Please enter a valid amount paid.', 'error');
                 return;
             }
-            
+
             // ✅ Send the ID in a collection and use the correct backend property name
             const formData = {
                 loanId: loanIdInput.value.trim(),
@@ -368,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
             showCustomAlert('Authentication failed. Please log in.', 'error');
             return;
         }
-        
+
         const loanDetailsEndpoint = `${API_BASE_URL}/Loan/${loanId}`;
 
         try {
